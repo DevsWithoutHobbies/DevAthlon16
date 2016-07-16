@@ -45,11 +45,11 @@ public class EventListener implements Listener {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
         if (itemInHand.getType() == Material.INK_SACK) {
-            executeZauber(player, 0);
+            executeMagic(player, 0);
         }
     }
 
-    public void executeZauber(Player player, int id) {
+    private void executeMagic(Player player, int id) {
         if (id == 0) {
             for (int i = 5; i < 20; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();

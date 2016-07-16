@@ -1,6 +1,5 @@
 package de.DevsWithoutHobbies.Runde1;
 
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,7 +16,7 @@ public class Zauberkrieg extends JavaPlugin {
     @Override
     public void onDisable() {}
 
-    void createConfig() {
+    private void createConfig() {
         try {
             if (!getDataFolder().exists()) {
                 if (!getDataFolder().mkdirs()) {
