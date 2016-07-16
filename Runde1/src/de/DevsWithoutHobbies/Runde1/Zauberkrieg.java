@@ -24,17 +24,13 @@ public class Zauberkrieg extends JavaPlugin {
 
     HashMap mana = new HashMap();
     HashMap magician = new HashMap();
-
+    int onlinePlayers = 0;
+    private BukkitTask countdownTask;
+    private int countdownTimer;
+    int minPlayers;
+    GameStatus in_game_status = GameStatus.WAITING;
     private List<Location> spawns = new ArrayList<Location>();
     private Location lobbySpawn;
-
-    int onlinePlayers = 0;
-    BukkitTask countdownTask;
-    int countdownTimer;
-    int minPlayers;
-
-
-    GameStatus in_game_status = GameStatus.WAITING;
 
     @Override
     public void onEnable() {
@@ -66,7 +62,8 @@ public class Zauberkrieg extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
     private void createConfig() {
         try {
@@ -209,7 +206,7 @@ public class Zauberkrieg extends JavaPlugin {
     private void startGame() {
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
-        for (Player player: getServer().getOnlinePlayers()) {
+        for (Player player : getServer().getOnlinePlayers()) {
             initInventoryForGame(player.getInventory(), (Magician) magician.get(player.getName()));
             player.teleport(spawns.get(counter));
             counter++;
@@ -218,7 +215,7 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void stopGame() {
         this.in_game_status = GameStatus.WAITING;
-        for (Player player: getServer().getOnlinePlayers()) {
+        for (Player player : getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
             player.teleport(lobbySpawn);
         }
