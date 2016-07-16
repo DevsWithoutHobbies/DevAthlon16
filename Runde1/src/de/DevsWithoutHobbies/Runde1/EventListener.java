@@ -45,7 +45,7 @@ public class EventListener implements Listener {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
         if (itemInHand.getType() == Material.INK_SACK) {
-            executeZauber(player, 0);
+            executeZauber(player, (int)itemInHand.getData().getData());
         }
     }
 
@@ -55,6 +55,16 @@ public class EventListener implements Listener {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
                 player.getWorld().createExplosion(loc, 1F);
+            }
+        } else if (id == 2) {
+            for (int i = 0; i < 5; i+=1) {
+                Vector direction = player.getEyeLocation().getDirection();
+                Location loc = player.getEyeLocation().add(direction.multiply(i));
+
+                player.sendMessage(player.getWorld().getBlockAt(loc).getType().toString());
+                if (player.getWorld().getBlockAt(loc).getType() == Material.IRON_DOOR_BLOCK) {
+                    player.sendMessage(((int)player.getWorld().getBlockAt(loc).getData()) + "");
+                }
             }
         }
     }
