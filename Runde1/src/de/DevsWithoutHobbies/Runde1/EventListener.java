@@ -204,7 +204,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        } else if (spell == Spell.POISION) { //Poison
+        } else if (spell == Spell.POISSON) { //Poison
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));

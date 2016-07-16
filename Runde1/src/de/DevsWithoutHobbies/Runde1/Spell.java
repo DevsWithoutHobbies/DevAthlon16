@@ -15,7 +15,7 @@ enum Spell {
     FIREBALL(7, "Fireball", 50),
     SLOWNESS(8, "Slowness", 40),
     BLINDNESS (9, "Blindness", 40),
-    POISION(10, "Poison", 40),
+    POISSON(10, "Poison", 40),
     TELEPORTATION(11, "Teleportation", 70);
 
     String name;

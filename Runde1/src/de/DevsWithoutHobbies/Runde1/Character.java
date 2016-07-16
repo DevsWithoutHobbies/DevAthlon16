@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
 enum Character {
     GANDALF(0, true, "Gandalf", asList(Spell.EXPLOSION, Spell.LEVITATION), asList()),
     HARRY_POTTER(1, true, "Harry Potter", asList(Spell.LEVITATION), asList()),
-    OP(2, true, "OP", asList(Spell.EXPLOSION, Spell.LEVITATION, Spell.DOOR_OPENER, Spell.ARROW_SHOOTER, Spell.WATER, Spell.LAVA, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.SLOWNESS, Spell.BLINDNESS, Spell.POISION, Spell.TELEPORTATION), asList()),
+    OP(2, true, "OP", asList(Spell.EXPLOSION, Spell.LEVITATION, Spell.DOOR_OPENER, Spell.ARROW_SHOOTER, Spell.WATER, Spell.LAVA, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.SLOWNESS, Spell.BLINDNESS, Spell.POISSON, Spell.TELEPORTATION), asList()),
     BUTCHER(5, false, "Butcher", asList(), asList(Material.WOOD_SWORD, Material.IRON_AXE));
 
 
