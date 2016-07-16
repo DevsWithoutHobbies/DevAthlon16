@@ -95,7 +95,6 @@ public class EventListener implements Listener {
             if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
                 Character new_character = Character.getByID(itemInHand.getData().getData());
                 plugin.magician.put(player.getName(), new_character);
-                player.sendMessage("You are now " + new_character);
             }
         }
     }

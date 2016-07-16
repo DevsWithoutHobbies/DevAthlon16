@@ -1,5 +1,7 @@
 package de.DevsWithoutHobbies.Runde1;
 
+import org.bukkit.Material;
+
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -9,19 +11,24 @@ import static java.util.Arrays.asList;
  *
  */
 enum Character {
-    GANDALF(0, "Gandalf", asList(Spell.EXPLOSION, Spell.LEVITATION)),
-    HARRY_POTTER(1, "Harry Potter", asList(Spell.LEVITATION)),
-    OP(2, "OP", asList(Spell.EXPLOSION, Spell.LEVITATION, Spell.DOOR_OPENER, Spell.ARROW_SHOOTER, Spell.WATER, Spell.LAVA, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.SLOWNESS, Spell.BLINDNESS, Spell.POISION, Spell.TELEPORTATION));
+    GANDALF(0, true, "Gandalf", asList(Spell.EXPLOSION, Spell.LEVITATION), asList()),
+    HARRY_POTTER(1, true, "Harry Potter", asList(Spell.LEVITATION), asList()),
+    OP(2, true, "OP", asList(Spell.EXPLOSION, Spell.LEVITATION, Spell.DOOR_OPENER, Spell.ARROW_SHOOTER, Spell.WATER, Spell.LAVA, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.SLOWNESS, Spell.BLINDNESS, Spell.POISION, Spell.TELEPORTATION), asList()),
+    BUTCHER(5, false, "Butcher", asList(), asList(Material.WOOD_SWORD, Material.IRON_AXE));
 
 
-    String name;
     int id;
+    boolean is_magician;
+    String name;
     List<Spell> speels;
+    List<Material> items;
 
-    Character(int id, String name, List<Spell> spells) {
+    Character(int id, boolean is_magician, String name, List<Spell> spells, List<Material> items) {
+        this.id = id;
+        this.is_magician = is_magician;
         this.name = name;
         this.speels = spells;
-        this.id = id;
+        this.items = items;
     }
 
     int getID() {
@@ -30,6 +37,10 @@ enum Character {
 
     List<Spell> getSpells() {
         return this.speels;
+    }
+
+    List<Material> getMaterials() {
+        return this.items;
     }
 
     @Override
@@ -43,6 +54,6 @@ enum Character {
                 return character;
             }
         }
-        return GANDALF;
+        return null;
     }
 }

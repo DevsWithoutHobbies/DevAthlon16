@@ -130,12 +130,15 @@ public class Zauberkrieg extends JavaPlugin {
     void fillInventoryForLobby(Inventory inventory) {
         inventory.clear();
         for (int i = 0; i < 9; i++) {
-            ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) i);
-            ItemMeta im = item.getItemMeta();
-            im.setDisplayName(Character.getByID(i).toString());
-            getLogger().info(i + ": " + Character.getByID(i).toString());
-            item.setItemMeta(im);
-            inventory.addItem(item);
+            Character character = Character.getByID(i);
+            if (character != null) {
+                ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) i);
+                ItemMeta im = item.getItemMeta();
+                im.setDisplayName(character.toString());
+                getLogger().info(i + ": " + character.toString());
+                item.setItemMeta(im);
+                inventory.setItem(i, item);
+            }
         }
     }
 
@@ -146,6 +149,10 @@ public class Zauberkrieg extends JavaPlugin {
             ItemMeta im = item.getItemMeta();
             im.setDisplayName(spell.toString());
             item.setItemMeta(im);
+            inventory.addItem(item);
+        }
+        for (Material item_material: character.getMaterials()) {
+            ItemStack item = new ItemStack(item_material, 1);
             inventory.addItem(item);
         }
     }
