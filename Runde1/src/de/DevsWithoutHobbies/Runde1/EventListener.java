@@ -45,6 +45,10 @@ public class EventListener implements Listener {
         p.getInventory().addItem(item);
 
         plugin.onlinePlayers++;
+        if (plugin.onlinePlayers >= plugin.minPlayers) {
+            plugin.startCountdown();
+        }
+
 
         new BukkitRunnable() {
 
