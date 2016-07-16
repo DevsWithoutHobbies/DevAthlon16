@@ -49,7 +49,7 @@ public class Zauberkrieg extends JavaPlugin {
             public void run() {
                 updateXPBar();
             }
-        }.runTaskTimer(this, 0, 20);
+        }.runTaskTimer(this, 0, 10);
 
         final World default_world = getServer().getWorld("world");
 
@@ -234,7 +234,7 @@ public class Zauberkrieg extends JavaPlugin {
                     mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
                 }
             }
-        }.runTaskTimer(this, 0, 20);
+        }.runTaskTimer(this, 0, 10);
     }
 
     void stopMana() {

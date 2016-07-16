@@ -102,116 +102,149 @@ public class EventListener implements Listener {
     private void executeSpell(final Player player, int id) {
         Spell spell = Spell.getByID(id);
         if (spell == Spell.EXPLOSION) { // Explosion
-            for (int i = 5; i < 20; i+=3) {
-                Vector direction = player.getEyeLocation().getDirection();
-                Location loc = player.getEyeLocation().add(direction.multiply(i));
-                player.getWorld().createExplosion(loc, 1F);
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.EXPLOSION.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.EXPLOSION.getCost());
+                for (int i = 5; i < 20; i += 3) {
+                    Vector direction = player.getEyeLocation().getDirection();
+                    Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    player.getWorld().createExplosion(loc, 1F);
+                }
             }
         } else if (spell == Spell.LEVITATION) { // Levitation
-            for (int i = 10; i < 30; i+=3) {
-                Vector direction = player.getEyeLocation().getDirection();
-                Location loc = player.getEyeLocation().add(direction.multiply(i));
-                player.getWorld().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 2);
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    Location playerLocation = p.getLocation();
-                    if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 1));
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.LEVITATION.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.LEVITATION.getCost());
+                for (int i = 10; i < 30; i += 3) {
+                    Vector direction = player.getEyeLocation().getDirection();
+                    Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    player.getWorld().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 2);
+                    for (Player p : plugin.getServer().getOnlinePlayers()) {
+                        Location playerLocation = p.getLocation();
+                        if (playerLocation.subtract(loc).length() < 2) {
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 1));
+                        }
                     }
                 }
             }
         } else if (spell == Spell.DOOR_OPENER) { // Door Opener
-            Block target_block = player.getTargetBlock((Set<Material>) null, 3);
-            player.sendMessage("found block");
-            player.sendMessage(target_block.getType().toString());
-            if (target_block.getType() == Material.IRON_DOOR_BLOCK) {
-                player.sendMessage("found door");
-                MaterialData md = target_block.getState().getData();
-                ((Door)md).setOpen(!((Door)md).isOpen());
-                target_block.getState().setData(md);
-                target_block.getState().update();
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.DOOR_OPENER.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.DOOR_OPENER.getCost());
+                Block target_block = player.getTargetBlock((Set<Material>) null, 3);
+                player.sendMessage("found block");
+                player.sendMessage(target_block.getType().toString());
+                if (target_block.getType() == Material.IRON_DOOR_BLOCK) {
+                    player.sendMessage("found door");
+                    MaterialData md = target_block.getState().getData();
+                    ((Door) md).setOpen(!((Door) md).isOpen());
+                    target_block.getState().setData(md);
+                    target_block.getState().update();
+                }
             }
         } else if (spell == Spell.ARROW_SHOOTER) { // Arrow Shooter
-            final BukkitTask task = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.launchProjectile(Arrow.class);
-                }
-            }.runTaskTimer(plugin, 0, 5);
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.ARROW_SHOOTER.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.ARROW_SHOOTER.getCost());
+                final BukkitTask task = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.launchProjectile(Arrow.class);
+                    }
+                }.runTaskTimer(plugin, 0, 5);
 
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    task.cancel();
-                }
-            }.runTaskLater(plugin, 40);
-        } else if (spell == Spell.WATER) { // Water
-            Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
-            Location l = targetBlock.getLocation().add(0, 1, 0);
-            final Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
-            if (targetBlock.getType() != Material.AIR) {
-                if (target.getType() == Material.AIR) {
-                    target.setType(Material.WATER);
-                }
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        task.cancel();
+                    }
+                }.runTaskLater(plugin, 40);
             }
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    target.setType(Material.AIR);
+        } else if (spell == Spell.WATER) { // Water
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.WATER.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.WATER.getCost());
+                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+                Location l = targetBlock.getLocation().add(0, 1, 0);
+                final Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
+                if (targetBlock.getType() != Material.AIR) {
+                    if (target.getType() == Material.AIR) {
+                        target.setType(Material.WATER);
+                    }
                 }
-            }.runTaskLater(plugin, 200);
-        } else if (id==5) { // Lava
-            Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
-            Location l = targetBlock.getLocation().add(0, 1, 0);
-            Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
-            if (target.getType() == Material.AIR) {
-                target.setType(Material.LAVA);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        target.setType(Material.AIR);
+                    }
+                }.runTaskLater(plugin, 200);
+            }
+        } else if (spell == Spell.LAVA) { // Lava
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.LAVA.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.LAVA.getCost());
+                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+                Location l = targetBlock.getLocation().add(0, 1, 0);
+                Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
+                if (target.getType() == Material.AIR) {
+                    target.setType(Material.LAVA);
+                }
             }
         } else if (spell == Spell.SNOW_BALL_SHOOTER) { // Snow Ball Shooter
-            final BukkitTask task = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.launchProjectile(Snowball.class);
-                }
-            }.runTaskTimer(plugin, 0, 3);
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.SNOW_BALL_SHOOTER.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.SNOW_BALL_SHOOTER.getCost());
+                final BukkitTask task = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.launchProjectile(Snowball.class);
+                    }
+                }.runTaskTimer(plugin, 0, 3);
 
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    task.cancel();
-                }
-            }.runTaskLater(plugin, 40);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        task.cancel();
+                    }
+                }.runTaskLater(plugin, 40);
+            }
         } else if (spell == Spell.FIREBALL) { //Fireball
-            player.launchProjectile(Fireball.class);
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.FIREBALL.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.FIREBALL.getCost());
+                player.launchProjectile(Fireball.class);
+            }
         } else if (spell == Spell.SLOWNESS) { //Slowness
-            for (int i = 10; i < 30; i+=3) {
-                Vector direction = player.getEyeLocation().getDirection();
-                Location loc = player.getEyeLocation().add(direction.multiply(i));
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    Location playerLocation = p.getLocation();
-                    if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 1));
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.SLOWNESS.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.SLOWNESS.getCost());
+                for (int i = 10; i < 30; i += 3) {
+                    Vector direction = player.getEyeLocation().getDirection();
+                    Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    for (Player p : plugin.getServer().getOnlinePlayers()) {
+                        Location playerLocation = p.getLocation();
+                        if (playerLocation.subtract(loc).length() < 2) {
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 1));
+                        }
                     }
                 }
             }
         } else if (spell == Spell.BLINDNESS) { //Blindness
-            for (int i = 10; i < 30; i+=3) {
-                Vector direction = player.getEyeLocation().getDirection();
-                Location loc = player.getEyeLocation().add(direction.multiply(i));
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    Location playerLocation = p.getLocation();
-                    if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 1));
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.BLINDNESS.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.BLINDNESS.getCost());
+                for (int i = 10; i < 30; i += 3) {
+                    Vector direction = player.getEyeLocation().getDirection();
+                    Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    for (Player p : plugin.getServer().getOnlinePlayers()) {
+                        Location playerLocation = p.getLocation();
+                        if (playerLocation.subtract(loc).length() < 2) {
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 1));
+                        }
                     }
                 }
             }
-        } else if (spell == Spell.POISSON) { //Poison
-            for (int i = 10; i < 30; i+=3) {
-                Vector direction = player.getEyeLocation().getDirection();
-                Location loc = player.getEyeLocation().add(direction.multiply(i));
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    Location playerLocation = p.getLocation();
-                    if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 80, 1));
+        } else if (spell == Spell.POISON) { //Poison
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.POISON.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.POISON.getCost());
+                for (int i = 10; i < 30; i += 3) {
+                    Vector direction = player.getEyeLocation().getDirection();
+                    Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    for (Player p : plugin.getServer().getOnlinePlayers()) {
+                        Location playerLocation = p.getLocation();
+                        if (playerLocation.subtract(loc).length() < 2) {
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 80, 1));
+                        }
                     }
                 }
             }
