@@ -2,7 +2,7 @@ package de.DevsWithoutHobbies.Runde1;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
@@ -23,15 +23,16 @@ import java.util.List;
 public class Zauberkrieg extends JavaPlugin {
 
     HashMap mana = new HashMap();
-    private List<Spawn> spawns = new ArrayList<Spawn>();
-    private Spawn lobbySpawn;
+    HashMap magician = new HashMap();
+
+    private List<Location> spawns = new ArrayList<Location>();
+    private Location lobbySpawn;
+
     int onlinePlayers = 0;
     BukkitTask countdownTask;
     int countdownTimer;
     int minPlayers;
-    HashMap magician = new HashMap();
-    private List<Location> spawns = new ArrayList<Location>();
-    private Location lobbySpawn;
+
 
     GameStatus in_game_status = GameStatus.WAITING;
 
