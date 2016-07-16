@@ -2,3 +2,14 @@ name: Zauberkrieg
 version: 0.0.1
 author: DevsWithoutHobbies
 main: de.DevsWithoutHobbies.Runde1.Zauberkrieg
+commands:
+  start_game:
+    description: Starts the game.
+    usage: /<command>
+    permission: <plugin name>.start_game
+    permission-message: You don't have <permission>
+  stop_game:
+    description: Stops the game.
+    usage: /<command>
+    permission: <plugin name>.stop_game
+    permission-message: You don't have <permission>
