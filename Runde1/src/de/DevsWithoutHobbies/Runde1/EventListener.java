@@ -1,6 +1,5 @@
 package de.DevsWithoutHobbies.Runde1;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.material.Door;
@@ -23,7 +21,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
-
 import java.util.Set;
 
 public class EventListener implements Listener {
@@ -43,18 +40,19 @@ public class EventListener implements Listener {
             plugin.startCountdown();
         }
 
-
         new BukkitRunnable() {
-
             @Override
             public void run() {
-                e.getPlayer().setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip");
+                e.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
+                //e.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
             }
         }.runTaskLater(plugin, 20);
 
         plugin.mana.put(p.getName(), 0);
         plugin.magician.put(p.getName(), Magician.GANDALF);
         plugin.fillInventoryForLobby(p.getInventory());
+
+        p.teleport(plugin.lobbySpawn);
     }
 
     @EventHandler
