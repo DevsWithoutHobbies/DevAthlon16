@@ -6,5 +6,5 @@ package de.DevsWithoutHobbies.Runde1;
  */
 
 enum GameStatus {
-    WAITING, IN_GAME
+    WAITING, COUNTDOWN, IN_GAME
 }

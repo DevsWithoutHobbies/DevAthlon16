@@ -38,6 +38,12 @@ public class EventListener implements Listener {
         plugin.getLogger().info("Welcome to the server");
         Player p = e.getPlayer();
 
+        plugin.onlinePlayers++;
+        if (plugin.onlinePlayers >= plugin.minPlayers) {
+            plugin.startCountdown();
+        }
+
+
         new BukkitRunnable() {
 
             @Override
@@ -55,6 +61,10 @@ public class EventListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         plugin.mana.remove(event.getPlayer().getName());
         plugin.magician.remove(event.getPlayer().getName());
+        plugin.onlinePlayers--;
+        if (plugin.onlinePlayers < plugin.minPlayers) {
+            plugin.stopCountdown();
+        }
     }
 
     @EventHandler
