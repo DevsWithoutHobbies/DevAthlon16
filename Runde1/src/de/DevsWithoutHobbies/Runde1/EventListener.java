@@ -53,7 +53,9 @@ public class EventListener implements Listener {
         }.runTaskLater(plugin, 20);
 
         plugin.mana.put(player.getName(), 0);
-        plugin.magician.put(player.getName(), Character.GANDALF);
+
+        plugin.characters.put(player.getName(), null);
+
         plugin.fillInventoryForLobby(player.getInventory());
 
         player.teleport(plugin.lobbySpawn);
@@ -62,7 +64,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         plugin.mana.remove(event.getPlayer().getName());
-        plugin.magician.remove(event.getPlayer().getName());
+        plugin.characters.remove(event.getPlayer().getName());
         plugin.onlinePlayers--;
         if (plugin.onlinePlayers < plugin.minPlayers) {
             plugin.stopCountdown();
@@ -94,7 +96,10 @@ public class EventListener implements Listener {
         } else if (plugin.in_game_status == GameStatus.WAITING || plugin.in_game_status == GameStatus.COUNTDOWN) {
             if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
                 Character new_character = Character.getByID(itemInHand.getData().getData());
-                plugin.magician.put(player.getName(), new_character);
+
+                plugin.characters.put(player.getName(), new_character);
+            } else if (itemInHand.getType() == Material.BARRIER) {
+                plugin.characters.put(player.getName(), null);
             }
         }
     }

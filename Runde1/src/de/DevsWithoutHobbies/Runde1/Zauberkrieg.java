@@ -26,7 +26,7 @@ import java.util.List;
 public class Zauberkrieg extends JavaPlugin {
 
     HashMap mana = new HashMap();
-    HashMap magician = new HashMap();
+    HashMap characters = new HashMap();
     int onlinePlayers = 0;
     private BukkitTask countdownTask;
     private int countdownTimer;
@@ -135,6 +135,26 @@ public class Zauberkrieg extends JavaPlugin {
         return true;
     }
 
+    int getNumberOfMagicians() {
+        int result = 0;
+        for (Object player_name: characters.keySet()) {
+            if (Character.isObjectMagician(characters.get(player_name))) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    int getNumberOfHumans() {
+        int result = 0;
+        for (Object player_name: characters.keySet()) {
+            if (Character.isObjectHuman(characters.get(player_name))) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     void fillInventoryForLobby(Inventory inventory) {
         inventory.clear();
         for (int i = 0; i < 9; i++) {
@@ -148,6 +168,7 @@ public class Zauberkrieg extends JavaPlugin {
                 inventory.setItem(i, item);
             }
         }
+        inventory.setItem(4, new ItemStack(Material.BARRIER, 1));
     }
 
     private void initInventoryForGame(Inventory inventory, Character character) {
@@ -211,7 +232,14 @@ public class Zauberkrieg extends JavaPlugin {
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
         for (Player player : getServer().getOnlinePlayers()) {
-            initInventoryForGame(player.getInventory(), (Character) magician.get(player.getName()));
+            if (characters.get(player.getName()) == null) {
+                if (getNumberOfMagicians() >= getNumberOfHumans()) {
+                    characters.put(player.getName(), Character.BUTCHER);
+                } else {
+                    characters.put(player.getName(), Character.GANDALF);
+                }
+            }
+            initInventoryForGame(player.getInventory(), (Character) characters.get(player.getName()));
             player.teleport(spawns.get(counter));
             counter++;
         }
@@ -231,7 +259,9 @@ public class Zauberkrieg extends JavaPlugin {
             @Override
             public void run() {
                 for (Player player : getServer().getOnlinePlayers()) {
-                    mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
+                    if (Character.isObjectMagician(characters.get(player.getName()))) {
+                        mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
+                    }
                 }
             }
         }.runTaskTimer(this, 0, 20);
@@ -246,15 +276,24 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void updateXPBar() {
         for (Player player : getServer().getOnlinePlayers()) {
-            String text;
+            String text = null;
             if (in_game_status == GameStatus.IN_GAME) {
-                text = mana.get(player.getName()) + " Mana";
+                if (Character.isObjectMagician(characters.get(player.getName()))) {
+                    text = mana.get(player.getName()) + " Mana";
+                }
             } else {
-                text = "You are now " + magician.get(player.getName());
+                Character character = (Character) characters.get(player.getName());
+                if (character != null) {
+                    text = "You are a " + characters.get(player.getName());
+                } else {
+                    text = "You don't have any character.";
+                }
             }
-            IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + text + "\"}");
-            PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
+            if (text != null) {
+                IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + text + "\"}");
+                PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
+            }
         }
     }
 }
