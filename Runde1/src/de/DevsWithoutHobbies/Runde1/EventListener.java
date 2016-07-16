@@ -4,16 +4,20 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -26,7 +30,6 @@ import org.bukkit.util.Vector;
 
 import java.util.HashSet;
 
-import java.util.List;
 import java.util.Set;
 
 public class EventListener implements Listener {
@@ -57,6 +60,26 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+
+        if (plugin.in_game_status == GameStatus.WAITING) {
+            event.setCancelled(true);
+            plugin.fillInventoryForLobby(event.getInventory());
+        } else if (plugin.in_game_status == GameStatus.IN_GAME) {
+            if (event.getSlot() >= 36) {
+                event.setCancelled(true);
+                plugin.resetInventoryForGame(event.getInventory(), Magician.GANDALF); // TODO use correct value
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        event.setCancelled(true);
+    }
+
+
+    @EventHandler
     public void onPlayerInteractBlock(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
@@ -66,13 +89,13 @@ public class EventListener implements Listener {
     }
 
     private void executeMagic(final Player player, int id) {
-        if (id == 0) { //Explosion
+        if (id == 0) { // Explosion
             for (int i = 5; i < 20; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
                 player.getWorld().createExplosion(loc, 1F);
             }
-        } else if (id == 1) { //Levitation
+        } else if (id == 1) { // Levitation
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
@@ -83,7 +106,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        } else if (id == 2) { //Door Opener
+        } else if (id == 2) { // Door Opener
             Block target_block = player.getTargetBlock((Set<Material>) null, 3);
             player.sendMessage("found block");
             player.sendMessage(target_block.getType().toString());
@@ -94,7 +117,7 @@ public class EventListener implements Listener {
                 target_block.getState().setData(md);
                 target_block.getState().update();
             }
-        } else if (id==3) { //Arrow Shooter
+        } else if (id==3) { // Arrow Shooter
             final BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -108,16 +131,21 @@ public class EventListener implements Listener {
                     task.cancel();
                 }
             }.runTaskLater(plugin, 40);
-        } else if (id==4) { //Water
-
-
+        } else if (id==4) { // Water
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
             Location l = targetBlock.getLocation().add(0, 1, 0);
             Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
             if (target.getType() == Material.AIR) {
                 target.setType(Material.WATER);
             }
-        } else if (id==5) { //Snow Ball Shooter
+        } else if (id==5) { // Lava
+            Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+            Location l = targetBlock.getLocation().add(0, 1, 0);
+            Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
+            if (target.getType() == Material.AIR) {
+                target.setType(Material.LAVA);
+            }
+        } else if (id==6) { // Snow Ball Shooter
             final BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -131,7 +159,7 @@ public class EventListener implements Listener {
                     task.cancel();
                 }
             }.runTaskLater(plugin, 40);
-        } else if (id==6) { //Fireball
+        } else if (id==7) { // Fireball
             player.launchProjectile(Fireball.class);
         }
     }
