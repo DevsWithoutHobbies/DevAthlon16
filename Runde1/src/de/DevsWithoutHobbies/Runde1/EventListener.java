@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class EventListener implements Listener {
     private Zauberkrieg plugin;
@@ -26,5 +27,13 @@ public class EventListener implements Listener {
         im.setDisplayName("Awesome effect");
         item.setItemMeta(im);
         p.getInventory().addItem(item);
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                //event.getPlayer().setResourcePack("tex.zip");
+            }
+        }.runTaskLater(plugin, 20);
     }
 }
