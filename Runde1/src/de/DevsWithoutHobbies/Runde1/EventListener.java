@@ -3,9 +3,12 @@ package de.DevsWithoutHobbies.Runde1;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Fireball;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,6 +22,8 @@ import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import java.util.HashSet;
 
 import java.util.Set;
 
@@ -101,6 +106,29 @@ public class EventListener implements Listener {
                     task.cancel();
                 }
             }.runTaskLater(plugin, 40);
+        } else if (id==4) { //Water
+            Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+            Location l = targetBlock.getLocation().subtract(player.getEyeLocation().getDirection());
+            Block target = targetBlock.getWorld().getBlockAt(l);
+            if (target.getType() == Material.AIR) {
+                target.setType(Material.WATER);
+            }
+        } else if (id==5) { //Snow Ball Shooter
+            final BukkitTask task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.launchProjectile(Snowball.class);
+                }
+            }.runTaskTimer(plugin, 0, 3);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    task.cancel();
+                }
+            }.runTaskLater(plugin, 40);
+        } else if (id==6) { //Fireball
+            player.launchProjectile(Fireball.class);
         }
     }
 }
