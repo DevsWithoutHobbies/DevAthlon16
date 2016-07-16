@@ -45,7 +45,7 @@ public class EventListener implements Listener {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
         if (itemInHand.getType() == Material.INK_SACK) {
-            executeZauber(player, (int)itemInHand.getData().getData());
+            executeMagic(player, (int)itemInHand.getData().getData());
         }
     }
 
