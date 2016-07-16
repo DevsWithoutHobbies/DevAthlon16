@@ -1,13 +1,11 @@
 package de.DevsWithoutHobbies.Runde1;
 
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -78,6 +76,24 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        event.getEntity().setGameMode(GameMode.SPECTATOR);
+
+
+        Bukkit.broadcastMessage(ChatColor.RED + "The server will restart in 10 seconds");
+        plugin.in_game_status = GameStatus.WAITING;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    p.setGameMode(GameMode.ADVENTURE);
+                    p.teleport(plugin.lobbySpawn);
+                }
+            }
+        }.runTaskLater(plugin, 200);
+    }
+
+    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
@@ -107,7 +123,17 @@ public class EventListener implements Listener {
                 for (int i = 5; i < 20; i += 3) {
                     Vector direction = player.getEyeLocation().getDirection();
                     Location loc = player.getEyeLocation().add(direction.multiply(i));
-                    player.getWorld().createExplosion(loc, 1F);
+                    player.getWorld().playEffect(loc, Effect.EXPLOSION, 1);
+                    for (Player p : plugin.getServer().getOnlinePlayers()) {
+                        double distance = loc.distance(p.getLocation());
+                        if (distance < 4) {
+                            if (1/distance < 8) {
+                                p.damage(1 / distance);
+                            } else {
+                                p.damage(8.0);
+                            }
+                        }
+                    }
                 }
             }
         } else if (spell == Spell.LEVITATION) { // Levitation

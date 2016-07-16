@@ -1,7 +1,6 @@
 package de.DevsWithoutHobbies.Runde1;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
-import net.minecraft.server.v1_10_R1.InteractionResultWrapper;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -226,7 +225,7 @@ public class Zauberkrieg extends JavaPlugin {
         }
     }
 
-    void startMana() {
+    private void startMana() {
         manaTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -237,7 +236,7 @@ public class Zauberkrieg extends JavaPlugin {
         }.runTaskTimer(this, 0, 10);
     }
 
-    void stopMana() {
+    private void stopMana() {
         if (manaTask != null) {
             manaTask.cancel();
             manaTask = null;
