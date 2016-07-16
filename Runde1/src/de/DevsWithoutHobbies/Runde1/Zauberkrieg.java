@@ -29,7 +29,7 @@ public class Zauberkrieg extends JavaPlugin {
     private int countdownTimer;
     int minPlayers;
     GameStatus in_game_status = GameStatus.WAITING;
-    private List<Location> spawns = new ArrayList<Location>();
+    private List<Location> spawns = new ArrayList<>();
     private Location lobbySpawn;
 
     @Override
