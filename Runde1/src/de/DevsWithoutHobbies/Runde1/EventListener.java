@@ -4,20 +4,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -30,6 +26,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashSet;
 
+import java.util.List;
 import java.util.Set;
 
 public class EventListener implements Listener {
@@ -57,6 +54,13 @@ public class EventListener implements Listener {
                 //event.getPlayer().setResourcePack("tex.zip");
             }
         }.runTaskLater(plugin, 20);
+
+        plugin.mana.put(p.getName(), 0);
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        plugin.mana.remove(event.getPlayer().getName());
     }
 
     @EventHandler
@@ -159,8 +163,45 @@ public class EventListener implements Listener {
                     task.cancel();
                 }
             }.runTaskLater(plugin, 40);
-        } else if (id==7) { // Fireball
+        } else if (id==7) { //Fireball
             player.launchProjectile(Fireball.class);
+        } else if (id == 8) { //Slowness
+            for (int i = 10; i < 30; i+=3) {
+                Vector direction = player.getEyeLocation().getDirection();
+                Location loc = player.getEyeLocation().add(direction.multiply(i));
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    Location playerLocation = p.getLocation();
+                    if (playerLocation.subtract(loc).length() < 2) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
+                    }
+                }
+            }
+        } else if (id == 9) { //Blindness
+            for (int i = 10; i < 30; i+=3) {
+                Vector direction = player.getEyeLocation().getDirection();
+                Location loc = player.getEyeLocation().add(direction.multiply(i));
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    Location playerLocation = p.getLocation();
+                    if (playerLocation.subtract(loc).length() < 2) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+                    }
+                }
+            }
+        } else if (id == 10) { //Poison
+            for (int i = 10; i < 30; i+=3) {
+                Vector direction = player.getEyeLocation().getDirection();
+                Location loc = player.getEyeLocation().add(direction.multiply(i));
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    Location playerLocation = p.getLocation();
+                    if (playerLocation.subtract(loc).length() < 2) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
+                    }
+                }
+            }
+        } else if (id == 11) { //Teleportation
+            player.launchProjectile(EnderPearl.class);
         }
     }
+
+
 }

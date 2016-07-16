@@ -1,20 +1,14 @@
 package de.DevsWithoutHobbies.Runde1;
 
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-
-
+import java.util.HashMap;
 
 public class Zauberkrieg extends JavaPlugin {
+
+    HashMap mana = new HashMap();
 
     GameStatus in_game_status = GameStatus.WAITING;
 
@@ -23,6 +17,14 @@ public class Zauberkrieg extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
         createConfig();
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                updateXPBar();
+            }
+        }.runTaskTimer(this, 0, 40);
     }
 
     @Override
@@ -98,6 +100,14 @@ public class Zauberkrieg extends JavaPlugin {
         this.in_game_status = GameStatus.WAITING;
         for (Player player: getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
+        }
+    }
+
+    private void updateXPBar() {
+        for (Player player : getServer().getOnlinePlayers()) {
+            IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + mana.get(player.getName()) + " Mana\"}");
+            PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);;
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
         }
     }
 }
