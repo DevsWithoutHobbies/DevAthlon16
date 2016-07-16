@@ -10,6 +10,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -55,6 +57,18 @@ public class EventListener implements Listener {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
                 player.getWorld().createExplosion(loc, 1F);
+            }
+        } else if (id == 1) {
+            for (int i = 10; i < 30; i+=3) {
+                Vector direction = player.getEyeLocation().getDirection();
+                Location loc = player.getEyeLocation().add(direction.multiply(i));
+                //player.getWorld().createExplosion(loc, 1F);
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    Location playerLocation = p.getLocation();
+                    if (playerLocation.subtract(loc).length() < 2) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 4, 1));
+                    }
+                }
             }
         } else if (id == 2) {
             for (int i = 0; i < 5; i+=1) {
