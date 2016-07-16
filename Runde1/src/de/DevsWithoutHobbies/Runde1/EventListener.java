@@ -44,6 +44,8 @@ public class EventListener implements Listener {
         item.setItemMeta(im);
         p.getInventory().addItem(item);
 
+        plugin.onlinePlayers++;
+
         new BukkitRunnable() {
 
             @Override
@@ -58,6 +60,10 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         plugin.mana.remove(event.getPlayer().getName());
+        plugin.onlinePlayers--;
+        if (plugin.onlinePlayers < plugin.minPlayers) {
+            plugin.stopCountdown();
+        }
     }
 
     @EventHandler

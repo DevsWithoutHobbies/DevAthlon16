@@ -2,6 +2,8 @@ package de.DevsWithoutHobbies.Runde1;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,6 +27,10 @@ public class Zauberkrieg extends JavaPlugin {
     HashMap mana = new HashMap();
     private List<Spawn> spawns = new ArrayList<Spawn>();
     private Spawn lobbySpawn;
+    int onlinePlayers = 0;
+    BukkitTask countdownTask;
+    int countdownTimer;
+    int minPlayers;
 
     GameStatus in_game_status = GameStatus.WAITING;
 
@@ -32,6 +39,7 @@ public class Zauberkrieg extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
         createConfig();
+        onlinePlayers = getServer().getOnlinePlayers().size();
 
         new BukkitRunnable() {
             @Override
@@ -45,6 +53,8 @@ public class Zauberkrieg extends JavaPlugin {
             String[] spawnCoordinates = spawn.split(",");
             spawns.add(new Spawn(Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
         }
+
+        minPlayers = getConfig().getInt("min-player");
 
         String lSpawnString = this.getConfig().getString("spawn-lobby");
         String[] lSpawnArray = lSpawnString.split(",");
@@ -78,7 +88,7 @@ public class Zauberkrieg extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         sender.sendMessage(cmd.getName());
         if (cmd.getName().equalsIgnoreCase("start_game") && args.length == 0) {
-            this.startGame();
+            this.startCountdown();
         } else if (cmd.getName().equalsIgnoreCase("stop_game") && args.length == 0) {
             this.stopGame();
         } else {
@@ -111,6 +121,47 @@ public class Zauberkrieg extends JavaPlugin {
             item.setItemMeta(im);
             inventory.setItem(i, item);
         }
+    }
+
+    void startCountdown() {
+        countdownTimer = 31;
+        in_game_status = GameStatus.COUNTDOWN;
+        countdownTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                countdownTimer--;
+                if (countdownTimer == 30) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 30 seconds");
+                } else if (countdownTimer == 20) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 20 seconds");
+                } else if (countdownTimer == 10) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 10 seconds");
+                } else if (countdownTimer == 5) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 5 seconds");
+                } else if (countdownTimer == 4) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 4 seconds");
+                } else if (countdownTimer == 3) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 3 seconds");
+                } else if (countdownTimer == 2) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 2 seconds");
+                } else if (countdownTimer == 1) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 1 seconds");
+                } else if (countdownTimer == 0) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting now");
+                    in_game_status = GameStatus.IN_GAME;
+                    startGame();
+                }
+            }
+        }.runTaskTimer(this, 10, 20);
+    }
+
+    void stopCountdown() {
+        if (countdownTask != null) {
+            countdownTask.cancel();
+        }
+        Bukkit.broadcastMessage(ChatColor.RED + "Aborted! Not enough player");
+        in_game_status = GameStatus.WAITING;
+        countdownTask = null;
     }
 
     private void startGame() {
