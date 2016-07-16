@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,8 +30,9 @@ public class Zauberkrieg extends JavaPlugin {
     private int countdownTimer;
     int minPlayers;
     GameStatus in_game_status = GameStatus.WAITING;
-    private List<Location> spawns = new ArrayList<>();
+    private List<Location> spawns = new ArrayList<Location>();
     private Location lobbySpawn;
+    private List<Location> healingStations = new ArrayList<Location>();
 
     @Override
     public void onEnable() {
@@ -46,12 +48,25 @@ public class Zauberkrieg extends JavaPlugin {
             }
         }.runTaskTimer(this, 0, 40);
 
-        World default_world = getServer().getWorld("World");
+        final World default_world = getServer().getWorld("World");
 
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < getConfig().getInt("number-of-spawns"); i++) {
             String spawn = this.getConfig().getString("spawn-" + String.valueOf(i));
             String[] spawnCoordinates = spawn.split(",");
             spawns.add(new Location(default_world, Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
+        }
+        for (int i = 1; i < getConfig().getInt("number-of-healing-stations"); i++) {
+            String spawn = this.getConfig().getString("healing-" + String.valueOf(i));
+            String[] spawnCoordinates = spawn.split(",");
+            spawns.add(new Location(default_world, Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
+        }
+        for (final Location healingStation : healingStations) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    default_world.playEffect(healingStation.add(new Vector(0, 1, 0)), Effect.HEART, 1);
+                }
+            }.runTaskTimer(this, 0, 20);
         }
 
         minPlayers = getConfig().getInt("min-player");
@@ -156,6 +171,7 @@ public class Zauberkrieg extends JavaPlugin {
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting now");
                     in_game_status = GameStatus.IN_GAME;
                     startGame();
+                    this.cancel();
                 }
             }
         }.runTaskTimer(this, 10, 20);

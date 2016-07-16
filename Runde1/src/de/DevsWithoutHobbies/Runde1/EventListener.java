@@ -137,11 +137,19 @@ public class EventListener implements Listener {
         } else if (spell == Spell.WATER) { // Water
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
             Location l = targetBlock.getLocation().add(0, 1, 0);
-            Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
-            if (target.getType() == Material.AIR) {
-                target.setType(Material.WATER);
+            final Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
+            if (targetBlock.getType() != Material.AIR) {
+                if (target.getType() == Material.AIR) {
+                    target.setType(Material.WATER);
+                }
             }
-        } else if (spell == Spell.LAVE) { // Lava
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    target.setType(Material.AIR);
+                }
+            }.runTaskLater(plugin, 200);
+        } else if (id==5) { // Lava
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
             Location l = targetBlock.getLocation().add(0, 1, 0);
             Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block

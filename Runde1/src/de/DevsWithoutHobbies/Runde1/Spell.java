@@ -10,7 +10,7 @@ enum Spell {
     DOOR_OPENER(2, "Door Opener"),
     ARROW_SHOOTER(3, "Arrow Shooter"),
     WATER(4, "Water"),
-    LAVE(5, "Lave"),
+    LAVA(5, "Lava"),
     SNOW_BALL_SHOOTER(6, "Snow Ball Shooter"),
     FIREBALL(7, "Fireball"),
     SLOWNESS(8, "Slowness"),

@@ -1,5 +1,6 @@
 min-player: 2
 spawn-lobby: 0,0,0
+number-of-spawns: 8
 spawn-1: 10,10,10
 spawn-2: 10,10,10
 spawn-3: 10,10,10
@@ -8,3 +9,5 @@ spawn-5: 10,10,10
 spawn-6: 10,10,10
 spawn-7: 10,10,10
 spawn-8: 10,10,10
+number-of-healing-stations: 1
+healing-1: 20,20,20
