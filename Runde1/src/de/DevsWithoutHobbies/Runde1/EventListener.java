@@ -85,8 +85,16 @@ public class EventListener implements Listener {
     public void onPlayerInteractBlock(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
-        if (itemInHand.getType() == Material.INK_SACK) {
-            executeSpell(player, (int)itemInHand.getData().getData());
+        if (plugin.in_game_status == GameStatus.IN_GAME) {
+            if (itemInHand.getType() == Material.INK_SACK) {
+                executeSpell(player, (int) itemInHand.getData().getData());
+            }
+        } else if (plugin.in_game_status == GameStatus.WAITING || plugin.in_game_status == GameStatus.COUNTDOWN) {
+            if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
+                Magician new_magician = Magician.getByID(itemInHand.getData().getData());
+                plugin.magician.put(player.getName(), new_magician);
+                player.sendMessage("You are now " + new_magician);
+            }
         }
     }
 
