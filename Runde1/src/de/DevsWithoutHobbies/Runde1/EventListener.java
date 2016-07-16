@@ -3,6 +3,7 @@ package de.DevsWithoutHobbies.Runde1;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 public class EventListener implements Listener {
@@ -51,26 +53,25 @@ public class EventListener implements Listener {
         }
     }
 
-    private void executeMagic(Player player, int id) {
-        if (id == 0) {
+    private void executeMagic(final Player player, int id) {
+        if (id == 0) { //Explosion
             for (int i = 5; i < 20; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
                 player.getWorld().createExplosion(loc, 1F);
             }
-        } else if (id == 1) {
+        } else if (id == 1) { //Levitation
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
-                //player.getWorld().createExplosion(loc, 1F);
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     Location playerLocation = p.getLocation();
                     if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 4, 1));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 80, 1));
                     }
                 }
             }
-        } else if (id == 2) {
+        } else if (id == 2) { //Door Opener
             for (int i = 0; i < 5; i+=1) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
@@ -80,6 +81,20 @@ public class EventListener implements Listener {
                     player.sendMessage(((int)player.getWorld().getBlockAt(loc).getData()) + "");
                 }
             }
+        } else if (id==3) { //Arrow Shooter
+            final BukkitTask task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.launchProjectile(Arrow.class);
+                }
+            }.runTaskTimer(plugin, 0, 5);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    task.cancel();
+                }
+            }.runTaskLater(plugin, 40);
         }
     }
 }
