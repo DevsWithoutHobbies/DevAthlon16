@@ -118,7 +118,7 @@ public class Zauberkrieg extends JavaPlugin {
     @EventHandler
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("start_game") && args.length == 0) {
-            this.startCountdown();
+            this.startGame();
         } else if (cmd.getName().equalsIgnoreCase("stop_game") && args.length == 0) {
             this.stopGame();
         } else {
@@ -220,7 +220,13 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void updateXPBar() {
         for (Player player : getServer().getOnlinePlayers()) {
-            IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + mana.get(player.getName()) + " Mana\"}");
+            String text;
+            if (in_game_status == GameStatus.IN_GAME) {
+                text = mana.get(player.getName()) + " Mana";
+            } else {
+                text = "You are now " + magician.get(player.getName());
+            }
+            IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + text + "\"}");
             PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
         }

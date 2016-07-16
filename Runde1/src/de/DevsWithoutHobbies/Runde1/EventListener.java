@@ -1,5 +1,7 @@
 package de.DevsWithoutHobbies.Runde1;
 
+import org.bukkit.Effect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,6 +36,7 @@ public class EventListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent e) {
         plugin.getLogger().info("Welcome to the server");
         Player p = e.getPlayer();
+        p.setGameMode(GameMode.ADVENTURE);
 
         plugin.onlinePlayers++;
         if (plugin.onlinePlayers >= plugin.minPlayers) {
@@ -45,6 +48,7 @@ public class EventListener implements Listener {
             public void run() {
                 e.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
                 //e.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
+                //e.getPlayer().setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip");
             }
         }.runTaskLater(plugin, 20);
 
@@ -80,7 +84,7 @@ public class EventListener implements Listener {
 
 
     @EventHandler
-    public void onPlayerInteractBlock(PlayerInteractEvent event) {
+    public void onPlayerUse(PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
         if (plugin.in_game_status == GameStatus.IN_GAME) {
@@ -108,6 +112,7 @@ public class EventListener implements Listener {
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
+                player.getWorld().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 2);
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     Location playerLocation = p.getLocation();
                     if (playerLocation.subtract(loc).length() < 2) {
