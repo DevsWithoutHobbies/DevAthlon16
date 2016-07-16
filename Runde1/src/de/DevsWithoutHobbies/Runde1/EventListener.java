@@ -23,7 +23,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
-
 import java.util.Set;
 
 public class EventListener implements Listener {
@@ -44,18 +43,20 @@ public class EventListener implements Listener {
             plugin.startCountdown();
         }
 
-
         new BukkitRunnable() {
-
             @Override
             public void run() {
-                //player.setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip?dl=1");
+                //e.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
+                //e.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
+                //e.getPlayer().setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip");
             }
         }.runTaskLater(plugin, 20);
 
         plugin.mana.put(player.getName(), 0);
         plugin.magician.put(player.getName(), Character.GANDALF);
         plugin.fillInventoryForLobby(player.getInventory());
+
+        player.teleport(plugin.lobbySpawn);
     }
 
     @EventHandler

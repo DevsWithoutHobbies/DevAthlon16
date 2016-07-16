@@ -30,8 +30,9 @@ public class Zauberkrieg extends JavaPlugin {
     int minPlayers;
     GameStatus in_game_status = GameStatus.WAITING;
     private List<Location> spawns = new ArrayList<Location>();
-    private Location lobbySpawn;
+    Location lobbySpawn;
     private List<Location> healingStations = new ArrayList<Location>();
+    private BukkitTask manaTask;
 
     @Override
     public void onEnable() {
@@ -63,22 +64,22 @@ public class Zauberkrieg extends JavaPlugin {
         }
         for (final Location healingStation : healingStations) {
             final Location loc1 = new Location(default_world, healingStation.getX(), healingStation.getY() + 1, healingStation.getZ());
-            final List<Location> effects = new ArrayList<Location>();
-            effects.add(new Location(default_world, healingStation.getX() + 3, healingStation.getY(), healingStation.getZ()));
-            effects.add(new Location(default_world, healingStation.getX() - 3, healingStation.getY(), healingStation.getZ()));
-            effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() + 3));
-            effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() - 3));
-            effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
-            effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
-            effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
-            effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
+            //final List<Location> effects = new ArrayList<Location>();
+            //effects.add(new Location(default_world, healingStation.getX() + 3, healingStation.getY(), healingStation.getZ()));
+            //effects.add(new Location(default_world, healingStation.getX() - 3, healingStation.getY(), healingStation.getZ()));
+            //effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() + 3));
+            //effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() - 3));
+            //effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
+            //effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
+            //effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
+            //effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     default_world.playEffect(loc1, Effect.HEART, 10);
-                    for (Location effect : effects) {
-                        default_world.playEffect(effect, Effect.FLAME, 100);
-                    }
+                    //for (Location effect : effects) {
+                    //    default_world.playEffect(effect, Effect.FLAME, 100);
+                    //}
                 }
             }.runTaskTimer(this, 0, 15);
         }
@@ -174,7 +175,6 @@ public class Zauberkrieg extends JavaPlugin {
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting in 1 seconds");
                 } else if (countdownTimer == 0) {
                     Bukkit.broadcastMessage(ChatColor.GREEN + "Game starting now");
-                    in_game_status = GameStatus.IN_GAME;
                     startGame();
                     this.cancel();
                 }
