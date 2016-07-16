@@ -21,7 +21,9 @@ public class Zauberkrieg extends JavaPlugin {
     void createConfig() {
         try {
             if (!getDataFolder().exists()) {
-                getDataFolder().mkdirs();
+                if (!getDataFolder().mkdirs()) {
+                    getLogger().warning("Cannot create config folder!");
+                }
             }
             File file = new File(getDataFolder(), "config.yml");
             if (!file.exists()) {
