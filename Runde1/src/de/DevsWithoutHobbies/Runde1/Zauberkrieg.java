@@ -20,7 +20,6 @@ import java.util.HashMap;
 public class Zauberkrieg extends JavaPlugin {
 
     HashMap mana = new HashMap();
-
     GameStatus in_game_status = GameStatus.WAITING;
 
     @Override
@@ -85,7 +84,7 @@ public class Zauberkrieg extends JavaPlugin {
         }
     }
 
-    void initInventoryForGame(Inventory inventory, Magician magician) {
+    private void initInventoryForGame(Inventory inventory, Magician magician) {
         inventory.clear();
         resetInventoryForGame(inventory, magician);
     }
@@ -100,14 +99,14 @@ public class Zauberkrieg extends JavaPlugin {
         }
     }
 
-    void startGame() {
+    private void startGame() {
         this.in_game_status = GameStatus.IN_GAME;
         for (Player player: getServer().getOnlinePlayers()) {
             initInventoryForGame(player.getInventory(), Magician.GANDALF);
         }
     }
 
-    void stopGame() {
+    private void stopGame() {
         this.in_game_status = GameStatus.WAITING;
         for (Player player: getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
@@ -117,7 +116,7 @@ public class Zauberkrieg extends JavaPlugin {
     private void updateXPBar() {
         for (Player player : getServer().getOnlinePlayers()) {
             IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + mana.get(player.getName()) + " Mana\"}");
-            PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);;
+            PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
         }
     }
