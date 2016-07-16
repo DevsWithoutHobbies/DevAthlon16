@@ -87,7 +87,6 @@ public class Zauberkrieg extends JavaPlugin {
 
     @EventHandler
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage(cmd.getName());
         if (cmd.getName().equalsIgnoreCase("start_game") && args.length == 0) {
             this.startCountdown();
         } else if (cmd.getName().equalsIgnoreCase("stop_game") && args.length == 0) {
@@ -98,7 +97,7 @@ public class Zauberkrieg extends JavaPlugin {
         return true;
     }
 
-    Magician getMagicianByID(int id) {
+    private Magician getMagicianByID(int id) {
         if (id == 0) {
             return Magician.GANDALF;
         } else if (id == 1) {
@@ -121,44 +120,12 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void initInventoryForGame(Inventory inventory, Magician magician) {
         inventory.clear();
-        int start_id = magician.getID() * 5;
-
-        for (int i = 0; i < 5; i++) {
-            ItemStack item = new ItemStack(Material.INK_SACK, 1, (short) (i + start_id));
+        for (Spell spell:magician.getSpells()) {
+            ItemStack item = new ItemStack(Material.INK_SACK, 1, (short) spell.getID());
             ItemMeta im = item.getItemMeta();
-            im.setDisplayName(getTrickName(i + start_id));
+            im.setDisplayName(spell.toString());
             item.setItemMeta(im);
-            inventory.setItem(i, item);
-        }
-    }
-
-    private String getTrickName(int id) {
-        if (id == 0) {
-            return "Explosion";
-        } else if (id == 1) {
-            return "Levitation";
-        } else if (id == 2) {
-            return "Door Opener";
-        } else if (id == 3) {
-            return "Arrow Shooter";
-        } else if (id == 4) {
-            return "Water";
-        } else if (id == 5) {
-            return "Lava";
-        } else if (id == 6) {
-            return "Snow Ball Shooter";
-        } else if (id == 7) {
-            return "Fireball";
-        } else if (id == 8) {
-            return "Slowness";
-        } else if (id == 9) {
-            return "Blindness";
-        } else if (id == 10) {
-            return "Poison";
-        } else if (id == 11) {
-            return "Teleportation";
-        } else {
-            return "Unknown";
+            inventory.addItem(item);
         }
     }
 

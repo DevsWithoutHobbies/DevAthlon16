@@ -86,18 +86,19 @@ public class EventListener implements Listener {
         final Player player = event.getPlayer();
         ItemStack itemInHand = player.getItemInHand();
         if (itemInHand.getType() == Material.INK_SACK) {
-            executeMagic(player, (int)itemInHand.getData().getData());
+            executeSpell(player, (int)itemInHand.getData().getData());
         }
     }
 
-    private void executeMagic(final Player player, int id) {
-        if (id == 0) { // Explosion
+    private void executeSpell(final Player player, int id) {
+        Spell spell = Spell.getByID(id);
+        if (spell == Spell.EXPLOSION) { // Explosion
             for (int i = 5; i < 20; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
                 player.getWorld().createExplosion(loc, 1F);
             }
-        } else if (id == 1) { // Levitation
+        } else if (spell == Spell.LEVITATION) { // Levitation
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
@@ -108,7 +109,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        } else if (id == 2) { // Door Opener
+        } else if (spell == Spell.DOOR_OPENER) { // Door Opener
             Block target_block = player.getTargetBlock((Set<Material>) null, 3);
             player.sendMessage("found block");
             player.sendMessage(target_block.getType().toString());
@@ -119,7 +120,7 @@ public class EventListener implements Listener {
                 target_block.getState().setData(md);
                 target_block.getState().update();
             }
-        } else if (id==3) { // Arrow Shooter
+        } else if (spell == Spell.ARROW_SHOOTER) { // Arrow Shooter
             final BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -133,21 +134,21 @@ public class EventListener implements Listener {
                     task.cancel();
                 }
             }.runTaskLater(plugin, 40);
-        } else if (id==4) { // Water
+        } else if (spell == Spell.WATER) { // Water
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
             Location l = targetBlock.getLocation().add(0, 1, 0);
             Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
             if (target.getType() == Material.AIR) {
                 target.setType(Material.WATER);
             }
-        } else if (id==5) { // Lava
+        } else if (spell == Spell.LAVE) { // Lava
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
             Location l = targetBlock.getLocation().add(0, 1, 0);
             Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
             if (target.getType() == Material.AIR) {
                 target.setType(Material.LAVA);
             }
-        } else if (id==6) { // Snow Ball Shooter
+        } else if (spell == Spell.SNOW_BALL_SHOOTER) { // Snow Ball Shooter
             final BukkitTask task = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -161,9 +162,9 @@ public class EventListener implements Listener {
                     task.cancel();
                 }
             }.runTaskLater(plugin, 40);
-        } else if (id==7) { //Fireball
+        } else if (spell == Spell.FIREBALL) { //Fireball
             player.launchProjectile(Fireball.class);
-        } else if (id == 8) { //Slowness
+        } else if (spell == Spell.SLOWNESS) { //Slowness
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
@@ -174,7 +175,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        } else if (id == 9) { //Blindness
+        } else if (spell == Spell.BLINDNESS) { //Blindness
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
@@ -185,7 +186,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        } else if (id == 10) { //Poison
+        } else if (spell == Spell.POISION) { //Poison
             for (int i = 10; i < 30; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
                 Location loc = player.getEyeLocation().add(direction.multiply(i));
@@ -196,7 +197,7 @@ public class EventListener implements Listener {
                     }
                 }
             }
-        } else if (id == 11) { //Teleportation
+        } else if (spell == Spell.TELEPORTATION) { //Teleportation
             player.launchProjectile(EnderPearl.class);
         }
     }
