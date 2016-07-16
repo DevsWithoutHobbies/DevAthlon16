@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
 import org.bukkit.block.Block;
@@ -25,6 +26,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashSet;
 
+import java.util.List;
 import java.util.Set;
 
 public class EventListener implements Listener {
@@ -107,9 +109,11 @@ public class EventListener implements Listener {
                 }
             }.runTaskLater(plugin, 40);
         } else if (id==4) { //Water
+
+
             Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
-            Location l = targetBlock.getLocation().subtract(player.getEyeLocation().getDirection());
-            Block target = targetBlock.getWorld().getBlockAt(l);
+            Location l = targetBlock.getLocation().add(0, 1, 0);
+            Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
             if (target.getType() == Material.AIR) {
                 target.setType(Material.WATER);
             }
