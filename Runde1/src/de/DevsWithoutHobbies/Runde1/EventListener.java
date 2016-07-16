@@ -37,12 +37,6 @@ public class EventListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         plugin.getLogger().info("Welcome to the server");
         Player p = e.getPlayer();
-        p.sendMessage(ChatColor.RED + "Welcome to the server");
-        ItemStack item = new ItemStack(Material.INK_SACK, 1, (short) 5);
-        ItemMeta im = item.getItemMeta();
-        im.setDisplayName("Awesome effect");
-        item.setItemMeta(im);
-        p.getInventory().addItem(item);
 
         new BukkitRunnable() {
 
@@ -53,24 +47,21 @@ public class EventListener implements Listener {
         }.runTaskLater(plugin, 20);
 
         plugin.mana.put(p.getName(), 0);
+        plugin.magician.put(p.getName(), Magician.GANDALF);
+        plugin.fillInventoryForLobby(p.getInventory());
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         plugin.mana.remove(event.getPlayer().getName());
+        plugin.magician.remove(event.getPlayer().getName());
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-
         if (plugin.in_game_status == GameStatus.WAITING) {
             event.setCancelled(true);
             plugin.fillInventoryForLobby(event.getInventory());
-        } else if (plugin.in_game_status == GameStatus.IN_GAME) {
-            if (event.getSlot() >= 36) {
-                event.setCancelled(true);
-                plugin.resetInventoryForGame(event.getInventory(), Magician.GANDALF); // TODO use correct value
-            }
         }
     }
 
