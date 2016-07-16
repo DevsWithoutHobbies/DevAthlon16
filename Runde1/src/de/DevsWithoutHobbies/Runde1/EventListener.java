@@ -1,16 +1,13 @@
 package de.DevsWithoutHobbies.Runde1;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.Vector;
 
 public class EventListener implements Listener {
     private Zauberkrieg plugin;
@@ -29,6 +26,14 @@ public class EventListener implements Listener {
         im.setDisplayName("Awesome effect");
         item.setItemMeta(im);
         p.getInventory().addItem(item);
+
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                //event.getPlayer().setResourcePack("tex.zip");
+            }
+        }.runTaskLater(plugin, 20);
     }
 
     @EventHandler
