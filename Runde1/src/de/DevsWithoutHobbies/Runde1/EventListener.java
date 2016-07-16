@@ -34,7 +34,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
+    public void onPlayerJoin(final PlayerJoinEvent e) {
         plugin.getLogger().info("Welcome to the server");
         Player p = e.getPlayer();
         p.setGameMode(GameMode.ADVENTURE);
@@ -49,7 +49,7 @@ public class EventListener implements Listener {
 
             @Override
             public void run() {
-                //event.getPlayer().setResourcePack("tex.zip");
+                e.getPlayer().setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip");
             }
         }.runTaskLater(plugin, 20);
 

@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,25 +47,40 @@ public class Zauberkrieg extends JavaPlugin {
             }
         }.runTaskTimer(this, 0, 40);
 
-        final World default_world = getServer().getWorld("World");
+        final World default_world = getServer().getWorld("world");
 
-        for (int i = 1; i < getConfig().getInt("number-of-spawns"); i++) {
+        for (int i = 1; i <= getConfig().getInt("number-of-spawns"); i++) {
             String spawn = this.getConfig().getString("spawn-" + String.valueOf(i));
             String[] spawnCoordinates = spawn.split(",");
             spawns.add(new Location(default_world, Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
+            getLogger().info("Spawn at " + Integer.valueOf(spawnCoordinates[0]) + Integer.valueOf(spawnCoordinates[1]) + Integer.valueOf(spawnCoordinates[2]));
         }
-        for (int i = 1; i < getConfig().getInt("number-of-healing-stations"); i++) {
-            String spawn = this.getConfig().getString("healing-" + String.valueOf(i));
-            String[] spawnCoordinates = spawn.split(",");
-            spawns.add(new Location(default_world, Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
+        for (int i = 1; i <= getConfig().getInt("number-of-healing-stations"); i++) {
+            String heal = this.getConfig().getString("healing-" + String.valueOf(i));
+            String[] healCoordinates = heal.split(",");
+            healingStations.add(new Location(default_world, Integer.valueOf(healCoordinates[0]), Integer.valueOf(healCoordinates[1]), Integer.valueOf(healCoordinates[2])));
+            getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + Integer.valueOf(healCoordinates[1] + 1) + Integer.valueOf(healCoordinates[2]));
         }
         for (final Location healingStation : healingStations) {
+            final Location loc1 = new Location(default_world, healingStation.getX(), healingStation.getY() + 1, healingStation.getZ());
+            final List<Location> effects = new ArrayList<Location>();
+            effects.add(new Location(default_world, healingStation.getX() + 3, healingStation.getY(), healingStation.getZ()));
+            effects.add(new Location(default_world, healingStation.getX() - 3, healingStation.getY(), healingStation.getZ()));
+            effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() + 3));
+            effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() - 3));
+            effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
+            effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
+            effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
+            effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    default_world.playEffect(healingStation.add(new Vector(0, 1, 0)), Effect.HEART, 1);
+                    default_world.playEffect(loc1, Effect.HEART, 10);
+                    for (Location effect : effects) {
+                        default_world.playEffect(effect, Effect.FLAME, 100);
+                    }
                 }
-            }.runTaskTimer(this, 0, 20);
+            }.runTaskTimer(this, 0, 15);
         }
 
         minPlayers = getConfig().getInt("min-player");
@@ -180,8 +194,8 @@ public class Zauberkrieg extends JavaPlugin {
     void stopCountdown() {
         if (countdownTask != null) {
             countdownTask.cancel();
+            Bukkit.broadcastMessage(ChatColor.RED + "Aborted! Not enough player");
         }
-        Bukkit.broadcastMessage(ChatColor.RED + "Aborted! Not enough player");
         in_game_status = GameStatus.WAITING;
         countdownTask = null;
     }
