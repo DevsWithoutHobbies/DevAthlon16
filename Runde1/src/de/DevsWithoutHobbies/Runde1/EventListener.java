@@ -3,6 +3,7 @@ package de.DevsWithoutHobbies.Runde1;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,8 +11,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.Door;
+import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.Set;
 
 public class EventListener implements Listener {
     private Zauberkrieg plugin;
@@ -57,14 +62,15 @@ public class EventListener implements Listener {
                 player.getWorld().createExplosion(loc, 1F);
             }
         } else if (id == 2) {
-            for (int i = 0; i < 5; i+=1) {
-                Vector direction = player.getEyeLocation().getDirection();
-                Location loc = player.getEyeLocation().add(direction.multiply(i));
-
-                player.sendMessage(player.getWorld().getBlockAt(loc).getType().toString());
-                if (player.getWorld().getBlockAt(loc).getType() == Material.IRON_DOOR_BLOCK) {
-                    player.sendMessage(((int)player.getWorld().getBlockAt(loc).getData()) + "");
-                }
+            Block target_block = player.getTargetBlock((Set<Material>) null, 3);
+            player.sendMessage("found block");
+            player.sendMessage(target_block.getType().toString());
+            if (target_block.getType() == Material.IRON_DOOR_BLOCK) {
+                player.sendMessage("found door");
+                MaterialData md = target_block.getState().getData();
+                ((Door)md).setOpen(!((Door)md).isOpen());
+                target_block.getState().setData(md);
+                target_block.getState().update();
             }
         }
     }
