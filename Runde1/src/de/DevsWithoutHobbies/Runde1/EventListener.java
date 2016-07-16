@@ -49,7 +49,7 @@ public class EventListener implements Listener {
         }
     }
 
-    public void executeZauber(Player player, int id) {
+    private void executeMagic(Player player, int id) {
         if (id == 0) {
             for (int i = 5; i < 20; i+=3) {
                 Vector direction = player.getEyeLocation().getDirection();
