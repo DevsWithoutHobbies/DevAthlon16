@@ -15,11 +15,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Zauberkrieg extends JavaPlugin {
 
     HashMap mana = new HashMap();
+    private List<Spawn> spawns = new ArrayList<Spawn>();
+    private Spawn lobbySpawn;
+
     GameStatus in_game_status = GameStatus.WAITING;
 
     @Override
@@ -29,12 +34,21 @@ public class Zauberkrieg extends JavaPlugin {
         createConfig();
 
         new BukkitRunnable() {
-
             @Override
             public void run() {
                 updateXPBar();
             }
         }.runTaskTimer(this, 0, 40);
+
+        for (int i = 1; i < 9; i++) {
+            String spawn = this.getConfig().getString("spawn-" + String.valueOf(i));
+            String[] spawnCoordinates = spawn.split(",");
+            spawns.add(new Spawn(Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
+        }
+
+        String lSpawnString = this.getConfig().getString("spawn-lobby");
+        String[] lSpawnArray = lSpawnString.split(",");
+        lobbySpawn = new Spawn(Integer.valueOf(lSpawnArray[0]), Integer.valueOf(lSpawnArray[1]), Integer.valueOf(lSpawnArray[2]));
     }
 
     @Override
