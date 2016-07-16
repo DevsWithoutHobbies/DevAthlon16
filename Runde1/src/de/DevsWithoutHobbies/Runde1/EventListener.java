@@ -34,10 +34,10 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(final PlayerJoinEvent e) {
+    public void onPlayerJoin(final PlayerJoinEvent event) {
         plugin.getLogger().info("Welcome to the server");
-        Player p = e.getPlayer();
-        p.setGameMode(GameMode.ADVENTURE);
+        Player player = event.getPlayer();
+        player.setGameMode(GameMode.CREATIVE);
 
         plugin.onlinePlayers++;
         if (plugin.onlinePlayers >= plugin.minPlayers) {
@@ -49,13 +49,13 @@ public class EventListener implements Listener {
 
             @Override
             public void run() {
-                e.getPlayer().setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip");
+                //player.setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip?dl=1");
             }
         }.runTaskLater(plugin, 20);
 
-        plugin.mana.put(p.getName(), 0);
-        plugin.magician.put(p.getName(), Magician.GANDALF);
-        plugin.fillInventoryForLobby(p.getInventory());
+        plugin.mana.put(player.getName(), 0);
+        plugin.magician.put(player.getName(), Character.GANDALF);
+        plugin.fillInventoryForLobby(player.getInventory());
     }
 
     @EventHandler
@@ -92,9 +92,9 @@ public class EventListener implements Listener {
             }
         } else if (plugin.in_game_status == GameStatus.WAITING || plugin.in_game_status == GameStatus.COUNTDOWN) {
             if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
-                Magician new_magician = Magician.getByID(itemInHand.getData().getData());
-                plugin.magician.put(player.getName(), new_magician);
-                player.sendMessage("You are now " + new_magician);
+                Character new_character = Character.getByID(itemInHand.getData().getData());
+                plugin.magician.put(player.getName(), new_character);
+                player.sendMessage("You are now " + new_character);
             }
         }
     }

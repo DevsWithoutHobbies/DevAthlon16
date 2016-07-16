@@ -126,30 +126,21 @@ public class Zauberkrieg extends JavaPlugin {
         return true;
     }
 
-    private Magician getMagicianByID(int id) {
-        if (id == 0) {
-            return Magician.GANDALF;
-        } else if (id == 1) {
-            return Magician.HARRY_POTTER;
-        } else {
-            return Magician.GANDALF;
-        }
-    }
-
     void fillInventoryForLobby(Inventory inventory) {
         inventory.clear();
         for (int i = 0; i < 9; i++) {
             ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) i);
             ItemMeta im = item.getItemMeta();
-            im.setDisplayName(getMagicianByID(i).toString());
+            im.setDisplayName(Character.getByID(i).toString());
+            getLogger().info(i + ": " + Character.getByID(i).toString());
             item.setItemMeta(im);
             inventory.addItem(item);
         }
     }
 
-    private void initInventoryForGame(Inventory inventory, Magician magician) {
+    private void initInventoryForGame(Inventory inventory, Character character) {
         inventory.clear();
-        for (Spell spell:magician.getSpells()) {
+        for (Spell spell: character.getSpells()) {
             ItemStack item = new ItemStack(Material.INK_SACK, 1, (short) spell.getID());
             ItemMeta im = item.getItemMeta();
             im.setDisplayName(spell.toString());
@@ -204,7 +195,7 @@ public class Zauberkrieg extends JavaPlugin {
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
         for (Player player : getServer().getOnlinePlayers()) {
-            initInventoryForGame(player.getInventory(), (Magician) magician.get(player.getName()));
+            initInventoryForGame(player.getInventory(), (Character) magician.get(player.getName()));
             player.teleport(spawns.get(counter));
             counter++;
         }

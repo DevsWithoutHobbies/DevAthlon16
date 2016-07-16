@@ -8,16 +8,17 @@ import static java.util.Arrays.asList;
  * Created by noah on 7/16/16.
  *
  */
-enum Magician {
+enum Character {
     GANDALF(0, "Gandalf", asList(Spell.EXPLOSION, Spell.LEVITATION)),
-    HARRY_POTTER(1, "Harry Potter", asList(Spell.LEVITATION));
+    HARRY_POTTER(1, "Harry Potter", asList(Spell.LEVITATION)),
+    OP(2, "OP", asList(Spell.EXPLOSION, Spell.LEVITATION, Spell.DOOR_OPENER, Spell.ARROW_SHOOTER, Spell.WATER, Spell.LAVA, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.SLOWNESS, Spell.BLINDNESS, Spell.POISION, Spell.TELEPORTATION));
 
 
     String name;
     int id;
     List<Spell> speels;
 
-    Magician(int id, String name, List<Spell> spells) {
+    Character(int id, String name, List<Spell> spells) {
         this.name = name;
         this.speels = spells;
         this.id = id;
@@ -36,12 +37,12 @@ enum Magician {
         return this.name;
     }
 
-    public static Magician getByID(int id) {
-        for(Magician magician: values()) {
-            if(magician.getID() == id) {
-                return magician;
+    public static Character getByID(int id) {
+        for(Character character : values()) {
+            if(character.getID() == id) {
+                return character;
             }
         }
-        return null;
+        return GANDALF;
     }
 }
