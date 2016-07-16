@@ -1,6 +1,7 @@
 package de.DevsWithoutHobbies.Runde1;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
+import net.minecraft.server.v1_10_R1.InteractionResultWrapper;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -12,6 +13,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -46,7 +49,7 @@ public class Zauberkrieg extends JavaPlugin {
             public void run() {
                 updateXPBar();
             }
-        }.runTaskTimer(this, 0, 40);
+        }.runTaskTimer(this, 0, 20);
 
         final World default_world = getServer().getWorld("world");
 
@@ -80,6 +83,11 @@ public class Zauberkrieg extends JavaPlugin {
                     //for (Location effect : effects) {
                     //    default_world.playEffect(effect, Effect.FLAME, 100);
                     //}
+                    for (Player p : getServer().getOnlinePlayers()) {
+                        if (loc1.distance(p.getLocation()) < 5) {
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 1));
+                        }
+                    }
                 }
             }.runTaskTimer(this, 0, 15);
         }
@@ -192,6 +200,7 @@ public class Zauberkrieg extends JavaPlugin {
     }
 
     private void startGame() {
+        startMana();
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
         for (Player player : getServer().getOnlinePlayers()) {
@@ -202,10 +211,29 @@ public class Zauberkrieg extends JavaPlugin {
     }
 
     private void stopGame() {
+        stopMana();
         this.in_game_status = GameStatus.WAITING;
         for (Player player : getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
             player.teleport(lobbySpawn);
+        }
+    }
+
+    void startMana() {
+        manaTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : getServer().getOnlinePlayers()) {
+                    mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
+                }
+            }
+        }.runTaskTimer(this, 0, 20);
+    }
+
+    void stopMana() {
+        if (manaTask != null) {
+            manaTask.cancel();
+            manaTask = null;
         }
     }
 

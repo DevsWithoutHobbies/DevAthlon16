@@ -190,7 +190,7 @@ public class EventListener implements Listener {
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     Location playerLocation = p.getLocation();
                     if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 80, 1));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 1));
                     }
                 }
             }
@@ -201,7 +201,7 @@ public class EventListener implements Listener {
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     Location playerLocation = p.getLocation();
                     if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 1));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 1));
                     }
                 }
             }
@@ -212,7 +212,7 @@ public class EventListener implements Listener {
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     Location playerLocation = p.getLocation();
                     if (playerLocation.subtract(loc).length() < 2) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 80, 1));
                     }
                 }
             }
