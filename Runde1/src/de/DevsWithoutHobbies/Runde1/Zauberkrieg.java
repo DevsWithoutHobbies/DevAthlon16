@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class Zauberkrieg extends JavaPlugin {
 
 

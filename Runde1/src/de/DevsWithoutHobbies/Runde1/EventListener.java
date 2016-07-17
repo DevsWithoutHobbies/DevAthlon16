@@ -25,6 +25,7 @@ import java.util.Set;
 
 import static java.lang.Math.abs;
 
+@SuppressWarnings("unchecked")
 class EventListener implements Listener {
     private final Zauberkrieg plugin;
 
