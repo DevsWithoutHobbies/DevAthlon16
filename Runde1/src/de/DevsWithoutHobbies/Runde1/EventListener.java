@@ -81,18 +81,23 @@ public class EventListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.getEntity().setGameMode(GameMode.SPECTATOR);
 
+        int aliveMagicians = plugin.getNumberOfAliveMagicians();
+        int aliveHumans = plugin.getNumberOfAliveHumans();
+        if (aliveMagicians == 0 || aliveHumans == 0) {
+            Bukkit.broadcastMessage(ChatColor.RED + "The server will restart in 10 seconds");
 
-        Bukkit.broadcastMessage(ChatColor.RED + "The server will restart in 10 seconds");
-        plugin.in_game_status = GameStatus.WAITING;
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    p.setGameMode(GameMode.ADVENTURE);
-                    p.teleport(plugin.lobbySpawn);
-                }
+            if (aliveHumans != 0) {
+                Bukkit.broadcastMessage(ChatColor.RED + "The Humans won the game");
+            } else {
+                Bukkit.broadcastMessage(ChatColor.RED + "The Magicians won the game");
             }
-        }.runTaskLater(plugin, 200);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    plugin.stopGame();
+                }
+            }.runTaskLater(plugin, 200);
+        }
     }
 
     @EventHandler

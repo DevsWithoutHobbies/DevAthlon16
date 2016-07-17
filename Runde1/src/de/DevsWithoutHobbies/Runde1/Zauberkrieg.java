@@ -144,10 +144,30 @@ public class Zauberkrieg extends JavaPlugin {
         return result;
     }
 
+    int getNumberOfAliveMagicians() {
+        int result = 0;
+        for (Object player_name: characters.keySet()) {
+            if (Character.isObjectMagician(characters.get(player_name)) && getServer().getPlayer((String) player_name).getGameMode() != GameMode.SPECTATOR) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     int getNumberOfHumans() {
         int result = 0;
         for (Object player_name: characters.keySet()) {
             if (Character.isObjectHuman(characters.get(player_name))) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    int getNumberOfAliveHumans() {
+        int result = 0;
+        for (Object player_name: characters.keySet()) {
+            if (Character.isObjectHuman(characters.get(player_name)) && getServer().getPlayer((String) player_name).getGameMode() != GameMode.SPECTATOR) {
                 result++;
             }
         }
@@ -244,11 +264,12 @@ public class Zauberkrieg extends JavaPlugin {
         }
     }
 
-    private void stopGame() {
+    void stopGame() {
         stopMana();
         this.in_game_status = GameStatus.WAITING;
         for (Player player : getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
+            player.setGameMode(GameMode.ADVENTURE);
             player.teleport(lobbySpawn);
         }
     }
