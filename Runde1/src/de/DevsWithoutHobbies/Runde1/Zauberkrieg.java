@@ -1,6 +1,7 @@
 package de.DevsWithoutHobbies.Runde1;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
+import net.minecraft.server.v1_10_R1.Item;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -204,8 +205,7 @@ public class Zauberkrieg extends JavaPlugin {
             item.setItemMeta(im);
             inventory.addItem(item);
         }
-        for (Material item_material: character.getMaterials()) {
-            ItemStack item = new ItemStack(item_material, 1);
+        for (ItemStack item : character.getItems()) {
             inventory.addItem(item);
         }
     }
@@ -260,7 +260,7 @@ public class Zauberkrieg extends JavaPlugin {
                 if (getNumberOfMagicians() >= getNumberOfHumans()) {
                     characters.put(player.getName(), Character.BUTCHER);
                 } else {
-                    characters.put(player.getName(), Character.GANDALF);
+                    characters.put(player.getName(), Character.ELEMENTARIST);
                 }
             }
             initInventoryForGame(player.getInventory(), (Character) characters.get(player.getName()));

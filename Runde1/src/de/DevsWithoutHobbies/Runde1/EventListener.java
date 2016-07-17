@@ -175,7 +175,7 @@ class EventListener implements Listener {
                 for (int i = 10; i < 30; i += 3) {
                     Vector direction = player.getEyeLocation().getDirection();
                     Location loc = player.getEyeLocation().add(direction.multiply(i));
-                    player.getWorld().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 2);
+                    player.getWorld().playEffect(loc, Effect.CLOUD, 2);
                     for (Player p : plugin.getServer().getOnlinePlayers()) {
                         Location playerLocation = p.getLocation();
                         if (playerLocation.subtract(loc).length() < 2) {
@@ -271,6 +271,7 @@ class EventListener implements Listener {
                 for (int i = 10; i < 30; i += 3) {
                     Vector direction = player.getEyeLocation().getDirection();
                     Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    player.getWorld().playEffect(loc, Effect.SMOKE, 2);
                     for (Player p : plugin.getServer().getOnlinePlayers()) {
                         Location playerLocation = p.getLocation();
                         if (playerLocation.subtract(loc).length() < 2) {
@@ -285,6 +286,7 @@ class EventListener implements Listener {
                 for (int i = 10; i < 30; i += 3) {
                     Vector direction = player.getEyeLocation().getDirection();
                     Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    player.getWorld().playEffect(loc, Effect.LARGE_SMOKE, 2);
                     for (Player p : plugin.getServer().getOnlinePlayers()) {
                         Location playerLocation = p.getLocation();
                         if (playerLocation.subtract(loc).length() < 2) {
@@ -299,6 +301,7 @@ class EventListener implements Listener {
                 for (int i = 10; i < 30; i += 3) {
                     Vector direction = player.getEyeLocation().getDirection();
                     Location loc = player.getEyeLocation().add(direction.multiply(i));
+                    player.getWorld().playEffect(loc, Effect.VILLAGER_PLANT_GROW, 2);
                     for (Player p : plugin.getServer().getOnlinePlayers()) {
                         Location playerLocation = p.getLocation();
                         if (playerLocation.subtract(loc).length() < 2) {
