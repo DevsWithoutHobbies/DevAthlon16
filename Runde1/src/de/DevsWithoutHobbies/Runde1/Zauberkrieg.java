@@ -327,11 +327,18 @@ public class Zauberkrieg extends JavaPlugin {
             @Override
             public void run() {
                 for (Player player : getServer().getOnlinePlayers()) {
+                    Integer last_mana = (Integer) mana.get(player.getName());
+                    int new_mana;
                     if (Character.isObjectMagician(characters.get(player.getName()))) {
-                        mana.put(player.getName(), (Integer) mana.get(player.getName()) + 2);
+                        new_mana = last_mana + 2;
                     } else {
-                        mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
+                        new_mana = last_mana + 1;
                     }
+                    int max_mana = Character.getMaxManaFromObject(characters.get(player.getName()));
+                    if (max_mana < new_mana) {
+                        new_mana = max_mana;
+                    }
+                    mana.put(player.getName(), new_mana);
                 }
             }
         }.runTaskTimer(this, 0, 10);
