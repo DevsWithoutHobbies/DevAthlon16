@@ -18,9 +18,9 @@ enum Spell {
     POISON(10, "Poison", 40),
     TELEPORTATION(11, "Teleportation", 70);
 
-    String name;
-    int id;
-    int mana;
+    final String name;
+    final int id;
+    final int mana;
 
     Spell(int id, String name, int mana) {
         this.id = id;

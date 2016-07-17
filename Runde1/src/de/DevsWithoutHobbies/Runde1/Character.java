@@ -17,11 +17,11 @@ enum Character {
     BUTCHER(5, false, "Butcher", asList(), asList(Material.WOOD_SWORD, Material.IRON_AXE));
 
 
-    int id;
-    boolean is_magician;
-    String name;
-    List<Spell> spells;
-    List<Material> items;
+    final int id;
+    final boolean is_magician;
+    final String name;
+    final List<Spell> spells;
+    final List<Material> items;
 
     Character(int id, boolean is_magician, String name, List<Spell> spells, List<Material> items) {
         this.id = id;
@@ -36,11 +36,11 @@ enum Character {
     }
 
     boolean isMagician() {
-        return id < 4;
+        return is_magician;
     }
 
     boolean isHuman() {
-        return !this.isMagician();
+        return !is_magician;
     }
 
     List<Spell> getSpells() {

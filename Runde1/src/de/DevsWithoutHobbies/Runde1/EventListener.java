@@ -25,10 +25,10 @@ import java.util.Set;
 
 import static java.lang.Math.abs;
 
-public class EventListener implements Listener {
-    private Zauberkrieg plugin;
+class EventListener implements Listener {
+    private final Zauberkrieg plugin;
 
-    public EventListener(Zauberkrieg instance) {
+    EventListener(Zauberkrieg instance) {
         plugin = instance;
     }
 
