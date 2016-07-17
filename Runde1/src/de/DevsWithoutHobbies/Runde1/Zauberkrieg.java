@@ -26,22 +26,17 @@ import java.util.List;
 public class Zauberkrieg extends JavaPlugin {
 
 
-    GameStatus in_game_status = GameStatus.WAITING;
-
     final HashMap mana = new HashMap();
     final HashMap characters = new HashMap();
-
+    private final List<Location> spawns = new ArrayList<>();
+    private final List<Location> healingStations = new ArrayList<>();
+    GameStatus in_game_status = GameStatus.WAITING;
     int onlinePlayers = 0; // TODO remove
-
+    Location lobbySpawn;
+    int minPlayers;
     private BukkitTask countdownTask;
     private BukkitTask manaTask;
     private int countdownTimer;
-
-    private final List<Location> spawns = new ArrayList<>();
-    private final List<Location> healingStations = new ArrayList<>();
-    Location lobbySpawn;
-
-    int minPlayers;
 
     @Override
     public void onEnable() {
