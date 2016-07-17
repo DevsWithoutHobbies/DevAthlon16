@@ -282,7 +282,9 @@ public class Zauberkrieg extends JavaPlugin {
         this.in_game_status = GameStatus.IN_GAME;
         this.burned = 0;
         for (Player player : getServer().getOnlinePlayers()) {
+            mana.put(player.getName(), 0);
             player.setFoodLevel(20);
+            player.setHealth(20);
             if (characters.get(player.getName()) == null) {
                 if (getNumberOfMagicians() >= getNumberOfHumans()) {
                     characters.put(player.getName(), Character.BUTCHER);
@@ -304,7 +306,9 @@ public class Zauberkrieg extends JavaPlugin {
             fillInventoryForLobby(player.getInventory());
             player.setGameMode(GameMode.ADVENTURE);
             player.setFoodLevel(20);
+            player.setHealth(20);
             player.teleport(lobbySpawn);
+            player.setFireTicks(0);
         }
         for (int i = 0; i < burning_places_count; i++) {
             disableBurningPlace(i);
