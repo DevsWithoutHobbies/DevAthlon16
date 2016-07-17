@@ -1,7 +1,6 @@
 package de.DevsWithoutHobbies.Runde1;
 
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
-import net.minecraft.server.v1_10_R1.Item;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -89,11 +88,7 @@ public class Zauberkrieg extends JavaPlugin {
                     //for (Location effect : effects) {
                     //    default_world.playEffect(effect, Effect.FLAME, 100);
                     //}
-                    for (Player p : getServer().getOnlinePlayers()) {
-                        if (loc1.distance(p.getLocation()) < 5) {
-                            p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 1));
-                        }
-                    }
+                    getServer().getOnlinePlayers().stream().filter(p -> loc1.distance(p.getLocation()) < 5).forEachOrdered(p -> p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 1)));
                 }
             }.runTaskTimer(this, 0, 15);
         }
@@ -205,9 +200,7 @@ public class Zauberkrieg extends JavaPlugin {
             item.setItemMeta(im);
             inventory.addItem(item);
         }
-        for (ItemStack item : character.getItems()) {
-            inventory.addItem(item);
-        }
+        character.getItems().forEach(inventory::addItem);
     }
 
     void startCountdown() {
@@ -283,11 +276,7 @@ public class Zauberkrieg extends JavaPlugin {
         manaTask = new BukkitRunnable() {
             @Override
             public void run() {
-                for (Player player : getServer().getOnlinePlayers()) {
-                    if (Character.isObjectMagician(characters.get(player.getName()))) {
-                        mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
-                    }
-                }
+                getServer().getOnlinePlayers().stream().filter(player -> Character.isObjectMagician(characters.get(player.getName()))).forEachOrdered(player -> mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1));
             }
         }.runTaskTimer(this, 0, 10);
     }

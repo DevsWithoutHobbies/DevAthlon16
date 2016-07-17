@@ -20,11 +20,11 @@ enum Character {
     ARCHER(6, false, "Archer", asList(), asList(new ItemStack(Material.BOW, 1), new ItemStack(Material.ARROW, 32)));
 
 
-    int id;
-    boolean is_magician;
-    String name;
-    List<ItemStack> items;
-    List<Spell> spells;
+    final int id;
+    final boolean is_magician;
+    final String name;
+    final List<ItemStack> items;
+    final List<Spell> spells;
 
     Character(int id, boolean is_magician, String name, List<Spell> spells, List<ItemStack> items) {
         this.id = id;
