@@ -45,7 +45,7 @@ class EventListener implements Listener {
             @Override
             public void run() {
                 //event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
-                event.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
+                //event.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
             }
         }.runTaskLater(plugin, 20);
 
@@ -335,7 +335,7 @@ class EventListener implements Listener {
                     for (Player p : plugin.getServer().getOnlinePlayers()) {
                         Location playerLocation = p.getLocation();
                         if (playerLocation.subtract(loc).length() < 2) {
-                            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 1));
+                            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 150, 1));
                         }
                     }
                 }
@@ -365,7 +365,7 @@ class EventListener implements Listener {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.INVISIBILITY.getCost());
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     if (p.getLocation().distance(player.getLocation()) < 3) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20, 1));
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 400, 1));
                     }
                 }
             }

@@ -40,7 +40,7 @@ enum Spell {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.name + " (" + this.getCost() + ")";
     }
 
     public static Spell getByID(int id) {
