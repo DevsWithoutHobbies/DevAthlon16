@@ -1,6 +1,7 @@
 package de.DevsWithoutHobbies.Runde1;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -11,19 +12,21 @@ import static java.util.Arrays.asList;
  *
  */
 enum Character {
-    GANDALF(0, true, "Gandalf", asList(Spell.EXPLOSION, Spell.LEVITATION), asList()),
-    HARRY_POTTER(1, true, "Harry Potter", asList(Spell.LEVITATION), asList()),
-    OP(2, true, "OP", asList(Spell.EXPLOSION, Spell.LEVITATION, Spell.DOOR_OPENER, Spell.ARROW_SHOOTER, Spell.WATER, Spell.LAVA, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.SLOWNESS, Spell.BLINDNESS, Spell.POISON, Spell.TELEPORTATION), asList()),
-    BUTCHER(5, false, "Butcher", asList(), asList(Material.WOOD_SWORD, Material.IRON_AXE));
+    ELEMENTARIST(0, true, "Elementarist", asList(Spell.WATER, Spell.LAVA, Spell.FIREBALL), asList()),
+    EXPLOSIONIST(1, true, "Explosionist", asList(Spell.FIREBALL, Spell.EXPLOSION, Spell.LAVA), asList()),
+    EFFECTIST(2, true, "Effectist", asList(Spell.LEVITATION, Spell.POISON, Spell.SLOWNESS, Spell.BLINDNESS), asList()),
+    SHOOTER(3, true, "Shooter", asList(Spell.ARROW_SHOOTER, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.TELEPORTATION), asList()),
+    BUTCHER(5, false, "Butcher", asList(), asList(new ItemStack(Material.WOOD_SWORD, 1), new ItemStack(Material.IRON_AXE, 1))),
+    ARCHER(6, false, "Archer", asList(), asList(new ItemStack(Material.BOW, 1), new ItemStack(Material.ARROW, 32)));
 
 
     int id;
     boolean is_magician;
     String name;
+    List<ItemStack> items;
     List<Spell> spells;
-    List<Material> items;
 
-    Character(int id, boolean is_magician, String name, List<Spell> spells, List<Material> items) {
+    Character(int id, boolean is_magician, String name, List<Spell> spells, List<ItemStack> items) {
         this.id = id;
         this.is_magician = is_magician;
         this.name = name;
@@ -47,7 +50,7 @@ enum Character {
         return this.spells;
     }
 
-    List<Material> getMaterials() {
+    List<ItemStack> getItems() {
         return this.items;
     }
 
