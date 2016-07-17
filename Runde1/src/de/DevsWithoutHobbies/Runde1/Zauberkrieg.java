@@ -182,7 +182,6 @@ public class Zauberkrieg extends JavaPlugin {
                 ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) i);
                 ItemMeta im = item.getItemMeta();
                 im.setDisplayName(character.toString());
-                getLogger().info(i + ": " + character.toString());
                 item.setItemMeta(im);
                 inventory.setItem(i, item);
             }
