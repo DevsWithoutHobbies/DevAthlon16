@@ -338,7 +338,7 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void updateXPBar() {
         for (Player player : getServer().getOnlinePlayers()) {
-            String text = null;
+            String text;
             if (in_game_status == GameStatus.IN_GAME) {
                 text = mana.get(player.getName()) + " Mana";
             } else {
