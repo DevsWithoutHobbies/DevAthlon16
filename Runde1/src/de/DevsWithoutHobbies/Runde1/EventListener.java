@@ -92,7 +92,6 @@ class EventListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.getEntity().setGameMode(GameMode.SPECTATOR);
-        event.getDrops().clear();
 
         int aliveMagicians = plugin.getNumberOfAliveMagicians();
         int aliveHumans = plugin.getNumberOfAliveHumans();

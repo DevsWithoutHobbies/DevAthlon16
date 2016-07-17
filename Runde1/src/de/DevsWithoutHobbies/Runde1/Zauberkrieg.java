@@ -318,7 +318,13 @@ public class Zauberkrieg extends JavaPlugin {
         manaTask = new BukkitRunnable() {
             @Override
             public void run() {
-                getServer().getOnlinePlayers().stream().filter(player -> Character.isObjectMagician(characters.get(player.getName()))).forEachOrdered(player -> mana.put(player.getName(), (Integer) mana.get(player.getName()) + 2));
+                for (Player player : getServer().getOnlinePlayers()) {
+                    if (Character.isObjectMagician(characters.get(player.getName()))) {
+                        mana.put(player.getName(), (Integer) mana.get(player.getName()) + 2);
+                    } else {
+                        mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1);
+                    }
+                }
             }
         }.runTaskTimer(this, 0, 10);
     }
@@ -334,9 +340,7 @@ public class Zauberkrieg extends JavaPlugin {
         for (Player player : getServer().getOnlinePlayers()) {
             String text = null;
             if (in_game_status == GameStatus.IN_GAME) {
-                if (Character.isObjectMagician(characters.get(player.getName()))) {
-                    text = mana.get(player.getName()) + " Mana";
-                }
+                text = mana.get(player.getName()) + " Mana";
             } else {
                 Character character = (Character) characters.get(player.getName());
                 if (character != null) {
@@ -345,11 +349,9 @@ public class Zauberkrieg extends JavaPlugin {
                     text = "You don't have any character.";
                 }
             }
-            if (text != null) {
-                IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + text + "\"}");
-                PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);
-                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
-            }
+            IChatBaseComponent chatBaseComponent = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + text + "\"}");
+            PacketPlayOutChat ppoc = new PacketPlayOutChat(chatBaseComponent, (byte) 2);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(ppoc);
         }
     }
 }
