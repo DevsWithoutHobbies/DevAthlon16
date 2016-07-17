@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -112,41 +114,43 @@ class EventListener implements Listener {
 
     @EventHandler
     public void onPlayerUse(PlayerInteractEvent event) {
-        final Player player = event.getPlayer();
-        ItemStack itemInHand = player.getItemInHand();
-        if (plugin.in_game_status == GameStatus.IN_GAME) {
-            if (itemInHand.getType() == Material.INK_SACK) {
-                executeSpell(player, (int) itemInHand.getData().getData());
-            }
-        } else if (plugin.in_game_status == GameStatus.WAITING || plugin.in_game_status == GameStatus.COUNTDOWN) {
-            if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
-                Character new_character = Character.getByID(itemInHand.getData().getData());
-                Character old_character = (Character) plugin.characters.get(player.getName());
+        if (event.getHand().equals(EquipmentSlot.HAND)) {
+            final Player player = event.getPlayer();
+            ItemStack itemInHand = player.getItemInHand();
+            if (plugin.in_game_status == GameStatus.IN_GAME) {
+                if (itemInHand.getType() == Material.INK_SACK) {
+                    executeSpell(player, (int) itemInHand.getData().getData());
+                }
+            } else if (plugin.in_game_status == GameStatus.WAITING || plugin.in_game_status == GameStatus.COUNTDOWN) {
+                if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
+                    Character new_character = Character.getByID(itemInHand.getData().getData());
+                    Character old_character = (Character) plugin.characters.get(player.getName());
 
-                int magician_count = plugin.getNumberOfMagicians();
-                int human_count = plugin.getNumberOfHumans();
+                    int magician_count = plugin.getNumberOfMagicians();
+                    int human_count = plugin.getNumberOfHumans();
 
-                if (new_character != null) {
-                    if (new_character.isMagician()) {
-                        magician_count++;
-                    } else {
-                        human_count++;
+                    if (new_character != null) {
+                        if (new_character.isMagician()) {
+                            magician_count++;
+                        } else {
+                            human_count++;
+                        }
                     }
-                }
-                if (old_character != null) {
-                    if (old_character.isMagician()) {
-                        magician_count--;
-                    } else {
-                        human_count--;
+                    if (old_character != null) {
+                        if (old_character.isMagician()) {
+                            magician_count--;
+                        } else {
+                            human_count--;
+                        }
                     }
+                    if (abs(magician_count - human_count) < 2) {
+                        plugin.characters.put(player.getName(), new_character);
+                    } else {
+                        player.sendMessage("Your old team is too small");
+                    }
+                } else if (itemInHand.getType() == Material.BARRIER) {
+                    plugin.characters.put(player.getName(), null);
                 }
-                if (abs(magician_count - human_count) < 2) {
-                    plugin.characters.put(player.getName(), new_character);
-                } else {
-                    player.sendMessage("Your old team is too small");
-                }
-            } else if (itemInHand.getType() == Material.BARRIER) {
-                plugin.characters.put(player.getName(), null);
             }
         }
     }
@@ -247,6 +251,12 @@ class EventListener implements Listener {
                         target.setType(Material.LAVA);
                     }
                 }
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        target.setType(Material.AIR);
+                    }
+                }.runTaskLater(plugin, 200);
             }
         } else if (spell == Spell.SNOW_BALL_SHOOTER) { // Snow Ball Shooter
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.SNOW_BALL_SHOOTER.getCost()) {
@@ -319,6 +329,20 @@ class EventListener implements Listener {
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.TELEPORTATION.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.TELEPORTATION.getCost());
                 player.launchProjectile(EnderPearl.class);
+            }
+        } else if (spell == Spell.SAND_TOWER) { // Sand Tower
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.SAND_TOWER.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.SAND_TOWER.getCost());
+                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+                for (int i = 0; i< 3; i++) {
+                    Location l = targetBlock.getLocation().add(0, 10 + i, 0);
+                    final Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
+                    if (targetBlock.getType() != Material.AIR) {
+                        if (target.getType() == Material.AIR) {
+                            target.setType(Material.SAND);
+                        }
+                    }
+                }
             }
         }
     }

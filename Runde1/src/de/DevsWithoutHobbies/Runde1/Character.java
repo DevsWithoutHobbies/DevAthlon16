@@ -12,7 +12,7 @@ import static java.util.Arrays.asList;
  *
  */
 enum Character {
-    ELEMENTARIST(0, true, "Elementarist", asList(Spell.WATER, Spell.LAVA, Spell.FIREBALL), asList()),
+    ELEMENTARIST(0, true, "Elementarist", asList(Spell.WATER, Spell.LAVA, Spell.FIREBALL, Spell.SAND_TOWER), asList()),
     EXPLOSIONIST(1, true, "Explosionist", asList(Spell.FIREBALL, Spell.EXPLOSION, Spell.LAVA), asList()),
     EFFECTIST(2, true, "Effectist", asList(Spell.LEVITATION, Spell.POISON, Spell.SLOWNESS, Spell.BLINDNESS), asList()),
     SHOOTER(3, true, "Shooter", asList(Spell.ARROW_SHOOTER, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.TELEPORTATION), asList()),
