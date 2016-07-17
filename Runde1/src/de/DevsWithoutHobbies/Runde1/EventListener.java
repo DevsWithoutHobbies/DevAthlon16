@@ -190,7 +190,34 @@ class EventListener implements Listener {
         if (spell == Spell.EXPLOSION) { // Explosion
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.EXPLOSION.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.EXPLOSION.getCost());
-                for (int i = 5; i < 20; i += 3) {
+                final int[] i = {5};
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (i[0] < 20) {
+                            i[0] += 3;
+
+                            Vector direction = player.getEyeLocation().getDirection();
+                            Location loc = player.getEyeLocation().add(direction.multiply(i[0]));
+                            player.getWorld().playEffect(loc, Effect.EXPLOSION_HUGE, 1);
+                            for (Player p : plugin.getServer().getOnlinePlayers()) {
+                                double distance = loc.distance(p.getLocation());
+                                if (distance < 4) {
+                                    if (1/distance < 8) {
+                                        p.damage(1 / distance);
+                                    } else {
+                                        p.damage(8.0);
+                                    }
+                                }
+                            }
+
+                        } else {
+                            this.cancel();
+                        }
+
+                    }
+                }.runTaskTimer(plugin, 0, 10);
+                /*for (int i = 5; i < 20; i += 3) {
                     Vector direction = player.getEyeLocation().getDirection();
                     Location loc = player.getEyeLocation().add(direction.multiply(i));
                     player.getWorld().playEffect(loc, Effect.EXPLOSION, 1);
@@ -204,7 +231,7 @@ class EventListener implements Listener {
                             }
                         }
                     }
-                }
+                }*/
             }
         } else if (spell == Spell.LEVITATION) { // Levitation
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.LEVITATION.getCost()) {
@@ -255,7 +282,7 @@ class EventListener implements Listener {
         } else if (spell == Spell.WATER) { // Water
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.WATER.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.WATER.getCost());
-                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 20);
                 Location l = targetBlock.getLocation().add(0, 1, 0);
                 final Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
                 if (targetBlock.getType() != Material.AIR) {
@@ -273,7 +300,7 @@ class EventListener implements Listener {
         } else if (spell == Spell.LAVA) { // Lava
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.LAVA.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.LAVA.getCost());
-                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 20);
                 Location l = targetBlock.getLocation().add(0, 1, 0);
                 Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
                 if (targetBlock.getType() != Material.AIR) {
@@ -286,7 +313,7 @@ class EventListener implements Listener {
                     public void run() {
                         target.setType(Material.AIR);
                     }
-                }.runTaskLater(plugin, 200);
+                }.runTaskLater(plugin, 20);
             }
         } else if (spell == Spell.SNOW_BALL_SHOOTER) { // Snow Ball Shooter
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.SNOW_BALL_SHOOTER.getCost()) {
@@ -372,7 +399,7 @@ class EventListener implements Listener {
         } else if (spell == Spell.SAND_TOWER) { // Sand Tower
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.SAND_TOWER.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.SAND_TOWER.getCost());
-                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
+                Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 20);
                 for (int i = 0; i< 3; i++) {
                     Location l = targetBlock.getLocation().add(0, 10 + i, 0);
                     final Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
