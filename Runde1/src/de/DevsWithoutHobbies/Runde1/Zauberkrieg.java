@@ -278,7 +278,7 @@ public class Zauberkrieg extends JavaPlugin {
         manaTask = new BukkitRunnable() {
             @Override
             public void run() {
-                getServer().getOnlinePlayers().stream().filter(player -> Character.isObjectMagician(characters.get(player.getName()))).forEachOrdered(player -> mana.put(player.getName(), (Integer) mana.get(player.getName()) + 1));
+                getServer().getOnlinePlayers().stream().filter(player -> Character.isObjectMagician(characters.get(player.getName()))).forEachOrdered(player -> mana.put(player.getName(), (Integer) mana.get(player.getName()) + 2));
             }
         }.runTaskTimer(this, 0, 10);
     }
