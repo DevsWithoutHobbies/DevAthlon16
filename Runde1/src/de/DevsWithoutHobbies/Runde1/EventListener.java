@@ -5,15 +5,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -24,8 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.Math.abs;
 
@@ -74,10 +67,23 @@ class EventListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (plugin.burningPeople.contains(player.getName())) {
+            Location loc = event.getPlayer().getLocation();
+            loc.setX(event.getFrom().getX());
+            loc.setY(event.getFrom().getY());
+            loc.setZ(event.getFrom().getZ());
+            player.teleport(loc);
+            event.setCancelled(true);
+        }
+    }
+
+
+        @EventHandler
     public void onInventoryClickItem(InventoryClickEvent event) {
         if (plugin.in_game_status == GameStatus.WAITING) {
             event.setCancelled(true);
-//            plugin.fillInventoryForLobby(event.getSource());
         }
     }
 
@@ -102,6 +108,30 @@ class EventListener implements Listener {
                 }
             }.runTaskLater(plugin, 200);
         }
+    }
+
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Player player = event.getPlayer();
+                if (((Character) plugin.characters.get(player.getName())).isHuman()) {
+                    player.teleport(plugin.respawn);
+                } else if (plugin.burningPeople.contains(player.getName())) {
+                    player.teleport(plugin.respawn);
+                    plugin.burningPeople.remove(player.getName());
+                } else {
+                    plugin.burningPeople.add(player.getName());
+                    Location player_loc = plugin.burningPlaces.get(plugin.burned).clone().add(0.5, 1.0, 0.5);
+                    player.teleport(player_loc);
+                    player.getPlayer().setGameMode(GameMode.ADVENTURE);
+                    plugin.enableBurningPlace(plugin.burned);
+                    plugin.burned++;
+                }
+            }
+        }.runTaskLater(plugin, 20);
     }
 
     @EventHandler

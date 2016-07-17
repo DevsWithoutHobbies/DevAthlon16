@@ -3,6 +3,8 @@ package de.DevsWithoutHobbies.Runde1;
 import net.minecraft.server.v1_10_R1.IChatBaseComponent;
 import net.minecraft.server.v1_10_R1.PacketPlayOutChat;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
@@ -26,12 +28,17 @@ import java.util.List;
 public class Zauberkrieg extends JavaPlugin {
 
 
+    GameStatus in_game_status = GameStatus.WAITING;
     final HashMap mana = new HashMap();
     final HashMap characters = new HashMap();
     private final List<Location> spawns = new ArrayList<>();
+    final List<Location> burningPlaces = new ArrayList<>();
     private final List<Location> healingStations = new ArrayList<>();
-    GameStatus in_game_status = GameStatus.WAITING;
+    int burning_places_count;
+    int burned = 0;
+    final List<String> burningPeople = new ArrayList<>();
     Location lobbySpawn;
+    Location respawn;
     int minPlayers;
     private BukkitTask countdownTask;
     private BukkitTask manaTask;
@@ -64,6 +71,13 @@ public class Zauberkrieg extends JavaPlugin {
             healingStations.add(new Location(default_world, Integer.valueOf(healCoordinates[0]), Integer.valueOf(healCoordinates[1]), Integer.valueOf(healCoordinates[2])));
             getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + Integer.valueOf(healCoordinates[1] + 1) + Integer.valueOf(healCoordinates[2]));
         }
+        burning_places_count = getConfig().getInt("number-of-burning-places");
+        for (int i = 1; i <= burning_places_count; i++) {
+            String heal = this.getConfig().getString("burn-" + String.valueOf(i));
+            String[] healCoordinates = heal.split(",");
+            burningPlaces.add(new Location(default_world, Integer.valueOf(healCoordinates[0]), Integer.valueOf(healCoordinates[1]), Integer.valueOf(healCoordinates[2])));
+            getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + Integer.valueOf(healCoordinates[1] + 1) + Integer.valueOf(healCoordinates[2]));
+        }
         for (final Location healingStation : healingStations) {
             final Location loc1 = new Location(default_world, healingStation.getX(), healingStation.getY() + 1, healingStation.getZ());
             //final List<Location> effects = new ArrayList<Location>();
@@ -92,6 +106,9 @@ public class Zauberkrieg extends JavaPlugin {
         String lSpawnString = this.getConfig().getString("spawn-lobby");
         String[] lSpawnArray = lSpawnString.split(",");
         lobbySpawn = new Location(default_world, Integer.valueOf(lSpawnArray[0]), Integer.valueOf(lSpawnArray[1]), Integer.valueOf(lSpawnArray[2]));
+        lSpawnString = this.getConfig().getString("respawn");
+        lSpawnArray = lSpawnString.split(",");
+        respawn = new Location(default_world, Integer.valueOf(lSpawnArray[0]), Integer.valueOf(lSpawnArray[1]), Integer.valueOf(lSpawnArray[2]));
     }
 
     @Override
@@ -128,6 +145,23 @@ public class Zauberkrieg extends JavaPlugin {
             return false;
         }
         return true;
+    }
+
+    private void setBurningPlace(int id, Material materials) {
+        Block mainBlock = burningPlaces.get(id).getBlock();
+        mainBlock.getRelative(BlockFace.UP).setType(materials);
+        mainBlock.getRelative(BlockFace.NORTH).setType(materials);
+        mainBlock.getRelative(BlockFace.EAST).setType(materials);
+        mainBlock.getRelative(BlockFace.WEST).setType(materials);
+        mainBlock.getRelative(BlockFace.SOUTH).setType(materials);
+    }
+
+    void enableBurningPlace(int id) {
+        setBurningPlace(id, Material.FIRE);
+    }
+
+    void disableBurningPlace(int id) {
+        setBurningPlace(id, Material.AIR);
     }
 
     int getNumberOfMagicians() {
@@ -246,6 +280,7 @@ public class Zauberkrieg extends JavaPlugin {
         startMana();
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
+        this.burned = 0;
         for (Player player : getServer().getOnlinePlayers()) {
             player.setFoodLevel(20);
             if (characters.get(player.getName()) == null) {
@@ -264,11 +299,15 @@ public class Zauberkrieg extends JavaPlugin {
     void stopGame() {
         stopMana();
         this.in_game_status = GameStatus.WAITING;
+        this.burningPeople.clear();
         for (Player player : getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
             player.setGameMode(GameMode.ADVENTURE);
             player.setFoodLevel(20);
             player.teleport(lobbySpawn);
+        }
+        for (int i = 0; i < burning_places_count; i++) {
+            disableBurningPlace(i);
         }
     }
 

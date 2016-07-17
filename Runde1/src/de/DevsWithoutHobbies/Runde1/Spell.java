@@ -17,7 +17,7 @@ enum Spell {
     BLINDNESS (9, "Blindness", 40),
     POISON(10, "Poison", 40),
     TELEPORTATION(11, "Teleportation", 60),
-    INVISIBILITY(12, "Invisibility", 60);
+    INVISIBILITY(12, "Invisibility", 60),
     SAND_TOWER(13, "Sand Tower", 5);
 
     final String name;

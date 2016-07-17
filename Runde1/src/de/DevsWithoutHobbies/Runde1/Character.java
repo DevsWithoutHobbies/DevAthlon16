@@ -18,7 +18,7 @@ enum Character {
     SHOOTER(3, true, "Shooter", asList(Spell.ARROW_SHOOTER, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.TELEPORTATION), asList()),
     BUTCHER(5, false, "Butcher", asList(), asList(new ItemStack(Material.WOOD_SWORD, 1), new ItemStack(Material.IRON_AXE, 1))),
     ARCHER(6, false, "Archer", asList(), asList(new ItemStack(Material.BOW, 1), new ItemStack(Material.ARROW, 32))),
-    MINER(5, false, "Miner", asList(), asList(new ItemStack(Material.DIAMOND_PICKAXE, 1), new ItemStack(Material.IRON_CHESTPLATE, 1)));
+    MINER(7, false, "Miner", asList(), asList(new ItemStack(Material.DIAMOND_PICKAXE, 1), new ItemStack(Material.IRON_CHESTPLATE, 1)));
 
 
     final int id;

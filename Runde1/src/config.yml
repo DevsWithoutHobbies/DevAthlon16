@@ -1,5 +1,6 @@
 min-player: 2
 spawn-lobby: 427,91,-997
+respawn: 395,110,-400
 number-of-spawns: 8
 spawn-1: 362,80,-386
 spawn-2: 464,84,-413
@@ -9,5 +10,10 @@ spawn-5: 391,77,-402
 spawn-6: 390,79,-432
 spawn-7: 418,82,-449
 spawn-8: 362,80,-426
+number-of-burning-places: 4
+burn-1: 401,79,-402
+burn-2: 406,79,-390
+burn-3: 406,79,-411
+burn-4: 398,79,-385
 number-of-healing-stations: 1
 healing-1: 428,81,-398
