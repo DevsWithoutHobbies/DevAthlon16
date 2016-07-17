@@ -208,21 +208,6 @@ class EventListener implements Listener {
 
                     }
                 }.runTaskTimer(plugin, 0, 10);
-                /*for (int i = 5; i < 20; i += 3) {
-                    Vector direction = player.getEyeLocation().getDirection();
-                    Location loc = player.getEyeLocation().add(direction.multiply(i));
-                    player.getWorld().playEffect(loc, Effect.EXPLOSION, 1);
-                    for (Player p : plugin.getServer().getOnlinePlayers()) {
-                        double distance = loc.distance(p.getLocation());
-                        if (distance < 4) {
-                            if (1/distance < 8) {
-                                p.damage(1 / distance);
-                            } else {
-                                p.damage(8.0);
-                            }
-                        }
-                    }
-                }*/
             }
         } else if (spell == Spell.LEVITATION) { // Levitation
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.LEVITATION.getCost()) {
