@@ -64,20 +64,20 @@ public class Zauberkrieg extends JavaPlugin {
             String spawn = this.getConfig().getString("spawn-" + String.valueOf(i));
             String[] spawnCoordinates = spawn.split(",");
             spawns.add(new Location(default_world, Integer.valueOf(spawnCoordinates[0]), Integer.valueOf(spawnCoordinates[1]), Integer.valueOf(spawnCoordinates[2])));
-            getLogger().info("Spawn at " + Integer.valueOf(spawnCoordinates[0]) + Integer.valueOf(spawnCoordinates[1]) + Integer.valueOf(spawnCoordinates[2]));
+            getLogger().info("Spawn at " + Integer.valueOf(spawnCoordinates[0]) + ", " + Integer.valueOf(spawnCoordinates[1]) + ", " + Integer.valueOf(spawnCoordinates[2]));
         }
         for (int i = 1; i <= getConfig().getInt("number-of-healing-stations"); i++) {
             String heal = this.getConfig().getString("healing-" + String.valueOf(i));
             String[] healCoordinates = heal.split(",");
             healingStations.add(new Location(default_world, Integer.valueOf(healCoordinates[0]), Integer.valueOf(healCoordinates[1]), Integer.valueOf(healCoordinates[2])));
-            getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + Integer.valueOf(healCoordinates[1] + 1) + Integer.valueOf(healCoordinates[2]));
+            getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + ", " + Integer.valueOf(healCoordinates[1] + 1) + ", " + Integer.valueOf(healCoordinates[2]));
         }
         burning_places_count = getConfig().getInt("number-of-burning-places");
         for (int i = 1; i <= burning_places_count; i++) {
-            String heal = this.getConfig().getString("burn-" + String.valueOf(i));
-            String[] healCoordinates = heal.split(",");
-            burningPlaces.add(new Location(default_world, Integer.valueOf(healCoordinates[0]), Integer.valueOf(healCoordinates[1]), Integer.valueOf(healCoordinates[2])));
-            getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + Integer.valueOf(healCoordinates[1] + 1) + Integer.valueOf(healCoordinates[2]));
+            String burn = this.getConfig().getString("burn-" + String.valueOf(i));
+            String[] burnCoordinates = burn.split(",");
+            burningPlaces.add(new Location(default_world, Integer.valueOf(burnCoordinates[0]), Integer.valueOf(burnCoordinates[1]), Integer.valueOf(burnCoordinates[2])));
+            getLogger().info("Burning place at " + Integer.valueOf(burnCoordinates[0]) + ", " + Integer.valueOf(burnCoordinates[1] + 1) + ", " + Integer.valueOf(burnCoordinates[2]));
         }
         for (final Location healingStation : healingStations) {
             final Location loc1 = new Location(default_world, healingStation.getX() + 0.5, healingStation.getY() + 1, healingStation.getZ() + 0.5);

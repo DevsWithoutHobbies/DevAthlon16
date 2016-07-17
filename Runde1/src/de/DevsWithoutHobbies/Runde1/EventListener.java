@@ -14,7 +14,6 @@ import org.bukkit.material.Door;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -41,14 +40,6 @@ class EventListener implements Listener {
         if (plugin.getServer().getOnlinePlayers().size() >= plugin.minPlayers) {
             plugin.startCountdown();
         }
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                //event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
-                //event.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
-            }
-        }.runTaskLater(plugin, 20);
 
         plugin.mana.put(player.getName(), 0);
 
@@ -221,21 +212,6 @@ class EventListener implements Listener {
 
                     }
                 }.runTaskTimer(plugin, 0, 10);
-                /*for (int i = 5; i < 20; i += 3) {
-                    Vector direction = player.getEyeLocation().getDirection();
-                    Location loc = player.getEyeLocation().add(direction.multiply(i));
-                    player.getWorld().playEffect(loc, Effect.EXPLOSION, 1);
-                    for (Player p : plugin.getServer().getOnlinePlayers()) {
-                        double distance = loc.distance(p.getLocation());
-                        if (distance < 4) {
-                            if (1/distance < 8) {
-                                p.damage(1 / distance);
-                            } else {
-                                p.damage(8.0);
-                            }
-                        }
-                    }
-                }*/
             }
         } else if (spell == Spell.LEVITATION) { // Levitation
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.LEVITATION.getCost()) {
@@ -394,11 +370,7 @@ class EventListener implements Listener {
         } else if (spell == Spell.INVISIBILITY) { //Invisibility
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.INVISIBILITY.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.INVISIBILITY.getCost());
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    if (p.getLocation().distance(player.getLocation()) < 3) {
-                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 400, 1));
-                    }
-                }
+                plugin.getServer().getOnlinePlayers().stream().filter(p -> p.getLocation().distance(player.getLocation()) < 3).forEachOrdered(p -> p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 400, 1)));
             }
         } else if (spell == Spell.SAND_TOWER) { // Sand Tower
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.SAND_TOWER.getCost()) {
