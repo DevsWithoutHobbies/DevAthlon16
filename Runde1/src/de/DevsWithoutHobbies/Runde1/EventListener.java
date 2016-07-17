@@ -43,8 +43,7 @@ class EventListener implements Listener {
         Player player = event.getPlayer();
         player.setGameMode(GameMode.ADVENTURE);
 
-        plugin.onlinePlayers++;
-        if (plugin.onlinePlayers >= plugin.minPlayers) {
+        if (plugin.getServer().getOnlinePlayers().size() >= plugin.minPlayers) {
             plugin.startCountdown();
         }
 
@@ -69,8 +68,7 @@ class EventListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         plugin.mana.remove(event.getPlayer().getName());
         plugin.characters.remove(event.getPlayer().getName());
-        plugin.onlinePlayers--;
-        if (plugin.onlinePlayers < plugin.minPlayers) {
+        if (plugin.getServer().getOnlinePlayers().size() < plugin.minPlayers) {
             plugin.stopCountdown();
         }
     }
@@ -329,6 +327,15 @@ class EventListener implements Listener {
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.TELEPORTATION.getCost()) {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.TELEPORTATION.getCost());
                 player.launchProjectile(EnderPearl.class);
+            }
+        } else if (spell == Spell.INVISIBILITY) { //Invisibility
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.INVISIBILITY.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.INVISIBILITY.getCost());
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    if (p.getLocation().distance(player.getLocation()) < 3) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20, 1));
+                    }
+                }
             }
         } else if (spell == Spell.SAND_TOWER) { // Sand Tower
             if ((Integer) plugin.mana.get(player.getName()) >= Spell.SAND_TOWER.getCost()) {
