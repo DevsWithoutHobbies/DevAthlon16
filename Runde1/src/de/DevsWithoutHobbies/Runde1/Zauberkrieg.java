@@ -57,8 +57,9 @@ public class Zauberkrieg extends JavaPlugin {
             }
         }.runTaskTimer(this, 0, 10);
 
-
-        final World default_world = getServer().getWorld("world");
+        Bukkit.createWorld(new WorldCreator("welt"));
+        final World default_world = getServer().getWorld("welt");
+        final World lobby_world = getServer().getWorld("world");
 
         for (int i = 1; i <= getConfig().getInt("number-of-spawns"); i++) {
             String spawn = this.getConfig().getString("spawn-" + String.valueOf(i));
@@ -104,7 +105,7 @@ public class Zauberkrieg extends JavaPlugin {
 
         String lSpawnString = this.getConfig().getString("spawn-lobby");
         String[] lSpawnArray = lSpawnString.split(",");
-        lobbySpawn = new Location(default_world, Integer.valueOf(lSpawnArray[0]), Integer.valueOf(lSpawnArray[1]), Integer.valueOf(lSpawnArray[2]));
+        lobbySpawn = new Location(lobby_world, Integer.valueOf(lSpawnArray[0]), Integer.valueOf(lSpawnArray[1]), Integer.valueOf(lSpawnArray[2]));
         lSpawnString = this.getConfig().getString("respawn");
         lSpawnArray = lSpawnString.split(",");
         respawn = new Location(default_world, Integer.valueOf(lSpawnArray[0]), Integer.valueOf(lSpawnArray[1]), Integer.valueOf(lSpawnArray[2]));
@@ -277,7 +278,7 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void startGame() {
         startMana();
-        final World default_world = getServer().getWorld("world");
+        final World default_world = getServer().getWorld("welt");
         default_world.setAutoSave(false);
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
@@ -322,8 +323,11 @@ public class Zauberkrieg extends JavaPlugin {
         for (int i = 0; i < burning_places_count; i++) {
             disableBurningPlace(i);
         }
-        Bukkit.unloadWorld("world", false);
-        Bukkit.createWorld(new WorldCreator("world"));
+
+        Bukkit.unloadWorld("welt", false);
+        Bukkit.createWorld(new WorldCreator("welt"));
+
+
         //getServer().getWorld("world").setAutoSave(true);
     }
 

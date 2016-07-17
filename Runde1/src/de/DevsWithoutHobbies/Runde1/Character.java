@@ -3,6 +3,7 @@ package de.DevsWithoutHobbies.Runde1;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -12,14 +13,14 @@ import static java.util.Arrays.asList;
  *
  */
 enum Character {
-    ELEMENTARIST(0, true, 300, "Elementarist", asList(Spell.WATER, Spell.LAVA, Spell.FIREBALL, Spell.SAND_TOWER), asList()),
-    EXPLOSIONIST(1, true, 300, "Explosionist", asList(Spell.FIREBALL, Spell.EXPLOSION, Spell.LAVA), asList()),
-    EFFECTIST(2, true, 300, "Effectist", asList(Spell.LEVITATION, Spell.POISON, Spell.SLOWNESS, Spell.BLINDNESS, Spell.INVISIBILITY), asList()),
-    SHOOTER(3, true, 300, "Shooter", asList(Spell.ARROW_SHOOTER, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.TELEPORTATION), asList()),
-    BUTCHER(5, false, 300, "Butcher", asList(), asList(new ItemStack(Material.WOOD_SWORD, 1), new ItemStack(Material.IRON_AXE, 1), new ItemStack(Material.LEATHER_CHESTPLATE, 1), new ItemStack(Material.LEATHER_LEGGINGS, 1), new ItemStack(Material.SHIELD, 1))),
-    ARCHER(6, false, 300, "Archer", asList(), asList(new ItemStack(Material.WOOD_SWORD, 1), new ItemStack(Material.BOW, 1), new ItemStack(Material.ARROW, 32), new ItemStack(Material.LEATHER_CHESTPLATE, 1), new ItemStack(Material.SHIELD, 1))),
-    MINER(7, false, 300, "Miner", asList(), asList(new ItemStack(Material.DIAMOND_PICKAXE, 1), new ItemStack(Material.IRON_CHESTPLATE, 1), new ItemStack(Material.IRON_LEGGINGS, 1), new ItemStack(Material.SHIELD, 1))),
-    FARMER(8, false, 300, "Farmer", asList(), asList(new ItemStack(Material.IRON_AXE, 1), new ItemStack(Material.EGG, 16), new ItemStack(Material.EGG, 16), new ItemStack(Material.LEATHER_CHESTPLATE, 1), new ItemStack(Material.LEATHER_LEGGINGS, 1), new ItemStack(Material.SHIELD, 1)));
+    ELEMENTARIST(0, true, 300, "Elementarist", asList(Spell.WATER, Spell.LAVA, Spell.FIREBALL, Spell.SAND_TOWER), Collections.emptyList()),
+    EXPLOSIONIST(1, true, 300, "Explosionist", asList(Spell.FIREBALL, Spell.EXPLOSION, Spell.LAVA), Collections.emptyList()),
+    EFFECTIST(2, true, 300, "Effectist", asList(Spell.LEVITATION, Spell.POISON, Spell.SLOWNESS, Spell.BLINDNESS, Spell.INVISIBILITY), Collections.emptyList()),
+    SHOOTER(3, true, 300, "Shooter", asList(Spell.ARROW_SHOOTER, Spell.SNOW_BALL_SHOOTER, Spell.FIREBALL, Spell.TELEPORTATION), Collections.emptyList()),
+    BUTCHER(5, false, 300, "Butcher", Collections.emptyList(), asList(new ItemStack(Material.WOOD_SWORD, 1), new ItemStack(Material.IRON_AXE, 1), new ItemStack(Material.LEATHER_CHESTPLATE, 1), new ItemStack(Material.LEATHER_LEGGINGS, 1), new ItemStack(Material.SHIELD, 1))),
+    ARCHER(6, false, 300, "Archer", Collections.emptyList(), asList(new ItemStack(Material.WOOD_SWORD, 1), new ItemStack(Material.BOW, 1), new ItemStack(Material.ARROW, 32), new ItemStack(Material.LEATHER_CHESTPLATE, 1), new ItemStack(Material.SHIELD, 1))),
+    MINER(7, false, 300, "Miner", Collections.emptyList(), asList(new ItemStack(Material.DIAMOND_PICKAXE, 1), new ItemStack(Material.IRON_CHESTPLATE, 1), new ItemStack(Material.IRON_LEGGINGS, 1), new ItemStack(Material.SHIELD, 1))),
+    FARMER(8, false, 300, "Farmer", Collections.emptyList(), asList(new ItemStack(Material.IRON_AXE, 1), new ItemStack(Material.EGG, 16), new ItemStack(Material.EGG, 16), new ItemStack(Material.LEATHER_CHESTPLATE, 1), new ItemStack(Material.LEATHER_LEGGINGS, 1), new ItemStack(Material.SHIELD, 1)));
 
 
     final int id;
