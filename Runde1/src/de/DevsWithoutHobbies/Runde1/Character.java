@@ -20,14 +20,14 @@ enum Character {
     int id;
     boolean is_magician;
     String name;
-    List<Spell> speels;
+    List<Spell> spells;
     List<Material> items;
 
     Character(int id, boolean is_magician, String name, List<Spell> spells, List<Material> items) {
         this.id = id;
         this.is_magician = is_magician;
         this.name = name;
-        this.speels = spells;
+        this.spells = spells;
         this.items = items;
     }
 
@@ -44,7 +44,7 @@ enum Character {
     }
 
     List<Spell> getSpells() {
-        return this.speels;
+        return this.spells;
     }
 
     List<Material> getMaterials() {

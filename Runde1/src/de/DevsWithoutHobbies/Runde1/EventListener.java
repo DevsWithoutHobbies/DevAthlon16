@@ -46,7 +46,6 @@ public class EventListener implements Listener {
             public void run() {
                 //e.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
                 //e.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
-                //e.getPlayer().setResourcePack("https://www.dropbox.com/s/3cjgtvzimmtvkzj/DevswithoutHobbies.zip");
             }
         }.runTaskLater(plugin, 20);
 
