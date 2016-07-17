@@ -312,7 +312,10 @@ class EventListener implements Listener {
                 }
             }
         } else if (spell == Spell.TELEPORTATION) { //Teleportation
-            player.launchProjectile(EnderPearl.class);
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.TELEPORTATION.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.TELEPORTATION.getCost());
+                player.launchProjectile(EnderPearl.class);
+            }
         }
     }
 
