@@ -277,6 +277,8 @@ public class Zauberkrieg extends JavaPlugin {
 
     private void startGame() {
         startMana();
+        final World default_world = getServer().getWorld("world");
+        default_world.setAutoSave(false);
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
         this.burned = 0;
@@ -294,7 +296,7 @@ public class Zauberkrieg extends JavaPlugin {
             initInventoryForGame(player.getInventory(), (Character) characters.get(player.getName()));
             player.teleport(spawns.get(counter));
             counter++;
-            if (characters.get(player.getName()) == Character.BUTCHER || characters.get(player.getName()) == Character.ARCHER || characters.get(player.getName()) == Character.MINER || characters.get(player.getName()) == Character.FARMER) {
+            if (((Character) characters.get(player.getName())).isHuman()) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 1000000, 4, false, false));
                 player.setHealth(40);
             }
@@ -320,6 +322,9 @@ public class Zauberkrieg extends JavaPlugin {
         for (int i = 0; i < burning_places_count; i++) {
             disableBurningPlace(i);
         }
+        Bukkit.unloadWorld("world", false);
+        Bukkit.createWorld(new WorldCreator("world"));
+        //getServer().getWorld("world").setAutoSave(true);
     }
 
     private void startMana() {

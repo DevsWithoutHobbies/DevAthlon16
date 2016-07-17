@@ -56,6 +56,10 @@ class EventListener implements Listener {
 
         plugin.fillInventoryForLobby(player.getInventory());
 
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+
         player.teleport(plugin.lobbySpawn);
     }
 
