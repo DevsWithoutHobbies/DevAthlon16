@@ -44,8 +44,8 @@ class EventListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                //e.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
-                //e.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
+                //event.getPlayer().setResourcePack("https://drive.google.com/uc?export=download&id=0B3nrXpuc7an1ZTZfMm9vS1dlbW8");
+                event.getPlayer().setResourcePack("http://addons-origin.cursecdn.com/files/2293/954/Mint%20Flavor.zip");
             }
         }.runTaskLater(plugin, 20);
 
@@ -91,6 +91,7 @@ class EventListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         event.getEntity().setGameMode(GameMode.SPECTATOR);
+        event.getDrops().clear();
 
         int aliveMagicians = plugin.getNumberOfAliveMagicians();
         int aliveHumans = plugin.getNumberOfAliveHumans();
@@ -145,7 +146,7 @@ class EventListener implements Listener {
     public void onPlayerUse(PlayerInteractEvent event) {
         if (event.getHand().equals(EquipmentSlot.HAND)) {
             final Player player = event.getPlayer();
-            ItemStack itemInHand = player.getItemInHand();
+            ItemStack itemInHand = player.getInventory().getItemInMainHand();
             if (plugin.in_game_status == GameStatus.IN_GAME) {
                 if (itemInHand.getType() == Material.INK_SACK) {
                     executeSpell(player, (int) itemInHand.getData().getData());

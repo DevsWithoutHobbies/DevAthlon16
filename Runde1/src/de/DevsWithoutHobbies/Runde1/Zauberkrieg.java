@@ -34,7 +34,7 @@ public class Zauberkrieg extends JavaPlugin {
     private final List<Location> spawns = new ArrayList<>();
     final List<Location> burningPlaces = new ArrayList<>();
     private final List<Location> healingStations = new ArrayList<>();
-    int burning_places_count;
+    private int burning_places_count;
     int burned = 0;
     final List<String> burningPeople = new ArrayList<>();
     Location lobbySpawn;
@@ -56,6 +56,7 @@ public class Zauberkrieg extends JavaPlugin {
                 updateXPBar();
             }
         }.runTaskTimer(this, 0, 10);
+
 
         final World default_world = getServer().getWorld("world");
 
@@ -79,23 +80,21 @@ public class Zauberkrieg extends JavaPlugin {
             getLogger().info("Healing at " + Integer.valueOf(healCoordinates[0]) + Integer.valueOf(healCoordinates[1] + 1) + Integer.valueOf(healCoordinates[2]));
         }
         for (final Location healingStation : healingStations) {
-            final Location loc1 = new Location(default_world, healingStation.getX(), healingStation.getY() + 1, healingStation.getZ());
-            //final List<Location> effects = new ArrayList<Location>();
-            //effects.add(new Location(default_world, healingStation.getX() + 3, healingStation.getY(), healingStation.getZ()));
-            //effects.add(new Location(default_world, healingStation.getX() - 3, healingStation.getY(), healingStation.getZ()));
-            //effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() + 3));
-            //effects.add(new Location(default_world, healingStation.getX(), healingStation.getY(), healingStation.getZ() - 3));
-            //effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
-            //effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() + 1.8));
-            //effects.add(new Location(default_world, healingStation.getX() + 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
-            //effects.add(new Location(default_world, healingStation.getX() - 1.8, healingStation.getY(), healingStation.getZ() - 1.8));
+            final Location loc1 = new Location(default_world, healingStation.getX() + 0.5, healingStation.getY() + 1, healingStation.getZ() + 0.5);
+            final List<Location> effects = new ArrayList<>();
+            effects.add(new Location(default_world, loc1.getX(), loc1.getY(), loc1.getZ()));
+            effects.add(new Location(default_world, loc1.getX(), loc1.getY() + 1, loc1.getZ()));
+            effects.add(new Location(default_world, loc1.getX() + 1, loc1.getY(), loc1.getZ() + 1));
+            effects.add(new Location(default_world, loc1.getX() - 1, loc1.getY(), loc1.getZ() + 1));
+            effects.add(new Location(default_world, loc1.getX() + 1, loc1.getY(), loc1.getZ() - 1));
+            effects.add(new Location(default_world, loc1.getX() - 1, loc1.getY(), loc1.getZ() - 1));
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    default_world.playEffect(loc1, Effect.HEART, 10);
-                    //for (Location effect : effects) {
-                    //    default_world.playEffect(effect, Effect.FLAME, 100);
-                    //}
+                    //default_world.playEffect(loc1, Effect.HEART, 10);
+                    for (Location effect : effects) {
+                        default_world.playEffect(effect, Effect.HEART, 10);
+                    }
                     getServer().getOnlinePlayers().stream().filter(p -> loc1.distance(p.getLocation()) < 5).forEachOrdered(p -> p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 60, 1)));
                 }
             }.runTaskTimer(this, 0, 15);
@@ -160,7 +159,7 @@ public class Zauberkrieg extends JavaPlugin {
         setBurningPlace(id, Material.FIRE);
     }
 
-    void disableBurningPlace(int id) {
+    private void disableBurningPlace(int id) {
         setBurningPlace(id, Material.AIR);
     }
 
