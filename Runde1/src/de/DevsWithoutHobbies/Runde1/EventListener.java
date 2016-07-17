@@ -117,8 +117,24 @@ public class EventListener implements Listener {
         } else if (plugin.in_game_status == GameStatus.WAITING || plugin.in_game_status == GameStatus.COUNTDOWN) {
             if (itemInHand.getType() == Material.STAINED_GLASS_PANE) {
                 Character new_character = Character.getByID(itemInHand.getData().getData());
-
-                plugin.characters.put(player.getName(), new_character);
+                Character old_character = (Character) plugin.characters.get(player.getName());
+                boolean change_character = false;
+                if (old_character.isMagician() != new_character.isMagician()) {
+                    int magician_count = plugin.getNumberOfMagicians();
+                    int human_count = plugin.getNumberOfHumans();
+                    player.sendMessage(magician_count + ":" + human_count + " -> " + new_character.isMagician() + "/" + (human_count - magician_count) + "/" + (magician_count - human_count));
+                    if ((new_character.isMagician() && human_count - magician_count > 0) ||
+                        (!new_character.isMagician() && magician_count - human_count > 0)) {
+                        change_character = true;
+                    }
+                } else {
+                    change_character = true;
+                }
+                if (change_character) {
+                    plugin.characters.put(player.getName(), new_character);
+                } else {
+                    player.sendMessage("Your old team is too small");
+                }
             } else if (itemInHand.getType() == Material.BARRIER) {
                 plugin.characters.put(player.getName(), null);
             }
