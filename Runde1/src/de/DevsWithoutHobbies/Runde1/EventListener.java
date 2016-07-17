@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -37,7 +39,7 @@ class EventListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent event) {
         plugin.getLogger().info("Welcome to the server");
         Player player = event.getPlayer();
-        player.setGameMode(GameMode.CREATIVE);
+        player.setGameMode(GameMode.ADVENTURE);
 
         plugin.onlinePlayers++;
         if (plugin.onlinePlayers >= plugin.minPlayers) {
@@ -72,10 +74,10 @@ class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClickItem(InventoryClickEvent event) {
         if (plugin.in_game_status == GameStatus.WAITING) {
             event.setCancelled(true);
-            plugin.fillInventoryForLobby(event.getInventory());
+//            plugin.fillInventoryForLobby(event.getSource());
         }
     }
 
@@ -240,8 +242,10 @@ class EventListener implements Listener {
                 Block targetBlock = player.getTargetBlock((HashSet<Byte>) null, 1000);
                 Location l = targetBlock.getLocation().add(0, 1, 0);
                 Block target = targetBlock.getWorld().getBlockAt(l); // TODO improve get block
-                if (target.getType() == Material.AIR) {
-                    target.setType(Material.LAVA);
+                if (targetBlock.getType() != Material.AIR) {
+                    if (target.getType() == Material.AIR) {
+                        target.setType(Material.LAVA);
+                    }
                 }
             }
         } else if (spell == Spell.SNOW_BALL_SHOOTER) { // Snow Ball Shooter

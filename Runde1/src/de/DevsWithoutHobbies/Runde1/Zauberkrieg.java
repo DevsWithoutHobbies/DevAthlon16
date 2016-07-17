@@ -184,7 +184,11 @@ public class Zauberkrieg extends JavaPlugin {
                 inventory.setItem(i, item);
             }
         }
-        inventory.setItem(4, new ItemStack(Material.BARRIER, 1));
+        ItemStack item = new ItemStack(Material.BARRIER, 1);
+        ItemMeta im = item.getItemMeta();
+        im.setDisplayName("Leave Team");
+        item.setItemMeta(im);
+        inventory.setItem(4, item);
     }
 
     private void initInventoryForGame(Inventory inventory, Character character) {
@@ -245,6 +249,7 @@ public class Zauberkrieg extends JavaPlugin {
         int counter = 0;
         this.in_game_status = GameStatus.IN_GAME;
         for (Player player : getServer().getOnlinePlayers()) {
+            player.setFoodLevel(20);
             if (characters.get(player.getName()) == null) {
                 if (getNumberOfMagicians() >= getNumberOfHumans()) {
                     characters.put(player.getName(), Character.BUTCHER);
@@ -264,6 +269,7 @@ public class Zauberkrieg extends JavaPlugin {
         for (Player player : getServer().getOnlinePlayers()) {
             fillInventoryForLobby(player.getInventory());
             player.setGameMode(GameMode.ADVENTURE);
+            player.setFoodLevel(20);
             player.teleport(lobbySpawn);
         }
     }
