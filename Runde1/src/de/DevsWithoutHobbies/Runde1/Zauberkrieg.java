@@ -294,7 +294,12 @@ public class Zauberkrieg extends JavaPlugin {
             initInventoryForGame(player.getInventory(), (Character) characters.get(player.getName()));
             player.teleport(spawns.get(counter));
             counter++;
+            if (characters.get(player.getName()) == Character.BUTCHER || characters.get(player.getName()) == Character.ARCHER || characters.get(player.getName()) == Character.MINER || characters.get(player.getName()) == Character.FARMER) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 1000000, 4, false, false));
+                player.setHealth(40);
+            }
         }
+
     }
 
     void stopGame() {
@@ -308,6 +313,9 @@ public class Zauberkrieg extends JavaPlugin {
             player.setHealth(20);
             player.teleport(lobbySpawn);
             player.setFireTicks(0);
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+            }
         }
         for (int i = 0; i < burning_places_count; i++) {
             disableBurningPlace(i);
