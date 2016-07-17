@@ -31,7 +31,6 @@ public class Zauberkrieg extends JavaPlugin {
     private final List<Location> spawns = new ArrayList<>();
     private final List<Location> healingStations = new ArrayList<>();
     GameStatus in_game_status = GameStatus.WAITING;
-    int onlinePlayers = 0; // TODO remove
     Location lobbySpawn;
     int minPlayers;
     private BukkitTask countdownTask;
@@ -43,7 +42,6 @@ public class Zauberkrieg extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new EventListener(this), this);
 
         createConfig();
-        onlinePlayers = getServer().getOnlinePlayers().size();
 
         new BukkitRunnable() {
             @Override

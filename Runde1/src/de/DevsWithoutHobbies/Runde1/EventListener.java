@@ -41,8 +41,7 @@ class EventListener implements Listener {
         Player player = event.getPlayer();
         player.setGameMode(GameMode.ADVENTURE);
 
-        plugin.onlinePlayers++;
-        if (plugin.onlinePlayers >= plugin.minPlayers) {
+        if (plugin.getServer().getOnlinePlayers().size() >= plugin.minPlayers) {
             plugin.startCountdown();
         }
 
@@ -67,8 +66,7 @@ class EventListener implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         plugin.mana.remove(event.getPlayer().getName());
         plugin.characters.remove(event.getPlayer().getName());
-        plugin.onlinePlayers--;
-        if (plugin.onlinePlayers < plugin.minPlayers) {
+        if (plugin.getServer().getOnlinePlayers().size() < plugin.minPlayers) {
             plugin.stopCountdown();
         }
     }
