@@ -35,6 +35,14 @@ enum Character {
         return this.id;
     }
 
+    boolean isMagician() {
+        return id < 4;
+    }
+
+    boolean isHuman() {
+        return !this.isMagician();
+    }
+
     List<Spell> getSpells() {
         return this.speels;
     }
@@ -55,5 +63,13 @@ enum Character {
             }
         }
         return null;
+    }
+
+    public static boolean isObjectMagician(Object object) {
+        return object != null && ((Character) object).isMagician();
+    }
+
+    public static boolean isObjectHuman(Object object) {
+        return object != null && ((Character) object).isHuman();
     }
 }
