@@ -316,6 +316,15 @@ class EventListener implements Listener {
                 plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.TELEPORTATION.getCost());
                 player.launchProjectile(EnderPearl.class);
             }
+        } else if (spell == Spell.INVISIBILITY) { //Invisibility
+            if ((Integer) plugin.mana.get(player.getName()) >= Spell.INVISIBILITY.getCost()) {
+                plugin.mana.put(player.getName(), (Integer) plugin.mana.get(player.getName()) - Spell.INVISIBILITY.getCost());
+                for (Player p : plugin.getServer().getOnlinePlayers()) {
+                    if (p.getLocation().distance(player.getLocation()) < 3) {
+                        p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20, 1));
+                    }
+                }
+            }
         }
     }
 
